@@ -99,7 +99,7 @@ app.use("/api/",            apiLimiter);
 // ============================================================
 
 // Serve public marketing site from the parent directory
-const publicDir = path.join(__dirname, "..");
+const publicDir = path.join(__dirname, process.env.PUBLIC_DIR || "..");
 app.use(express.static(publicDir, {
   index: "index.html",
   // Do NOT serve the admin folder as static — handled via dedicated route below
