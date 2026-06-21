@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO -->
+  <title>StayMaster Pro | Vacation Rental Property Management Software</title>
+  <meta name="description" content="All-in-one vacation rental property management software for Airbnb hosts, property managers, villas, apartments, and boutique hotels. Manage reservations, guests, cleaning, maintenance, owners, and reporting from one platform." />
+  <meta name="keywords" content="vacation rental software, property management system, Airbnb host software, short-term rental management, PMS software, holiday rental management" />
+
+  <!-- Favicon (inline SVG) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230B1F3A'/><path d='M8 22V13l8-7 8 7v9H20v-5h-4v5z' fill='%2300A6A6'/><rect x='13' y='17' width='6' height='5' rx='1' fill='%23F4C95D'/></svg>" />
+  <meta name="theme-color" content="#0B1F3A" />
+  <link rel="canonical" href="https://staymasterpro.com" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="StayMaster Pro | Vacation Rental Property Management Software" />
+  <meta name="twitter:description" content="All-in-one vacation rental PMS. Manage reservations, guests, cleaning, and reporting from one platform." />
+  <meta name="twitter:image" content="https://staymasterpro.com/og-image.jpg" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="StayMaster Pro | Vacation Rental Property Management Software" />
+  <meta property="og:description" content="All-in-one vacation rental property management software. Manage reservations, guests, cleaning, maintenance, and reporting from one platform." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://staymasterpro.com" />
+  <meta property="og:image" content="https://staymasterpro.com/og-image.jpg" />
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- AOS — Animate On Scroll -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Scroll progress bar -->
+  <style>#scroll-progress{position:fixed;top:0;left:0;height:3px;width:0%;background:linear-gradient(90deg,var(--color-secondary),var(--color-accent));z-index:9999;transition:width .1s linear;border-radius:0 2px 2px 0;}</style>
+
+  <!-- Dark mode: apply before paint to avoid flash -->
+  <script>if(localStorage.getItem('darkMode')==='1')document.documentElement.classList.add('dark-mode');</script>
+</head>
+<body class="page-loading">
+
+<!-- Scroll Progress Bar -->
+<div id="scroll-progress"></div>
+
+<!-- Back to Top Button -->
+<button id="back-to-top" title="Back to top" aria-label="Back to top">
+  <i data-lucide="arrow-up" style="width:18px;height:18px;"></i>
+</button>
+
+<!-- ============================================================
+     GDPR COOKIE BANNER
+============================================================ -->
+<div id="cookie-banner" class="cookie-banner" role="dialog" aria-label="Cookie consent">
+  <div class="cookie-inner">
+    <div class="cookie-text">
+      <i data-lucide="cookie" style="width:18px;height:18px;flex-shrink:0;color:var(--color-accent);"></i>
+      <span>We use cookies to improve your experience and analyse site traffic. By clicking <strong>Accept</strong> you consent to our use of cookies. <a href="#" class="cookie-link">Learn more</a></span>
+    </div>
+    <div class="cookie-actions">
+      <button id="cookie-decline" class="btn-cookie-decline">Decline</button>
+      <button id="cookie-accept" class="btn-cookie-accept">Accept All</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     LIVE CHAT WIDGET
+============================================================ -->
+<div id="chat-widget" class="chat-widget">
+  <!-- Bubble -->
+  <button id="chat-bubble" class="chat-bubble-btn" aria-label="Open live chat">
+    <i data-lucide="message-circle" class="chat-bubble-icon" id="chat-icon-open" style="width:24px;height:24px;"></i>
+    <i data-lucide="x" class="chat-bubble-icon d-none" id="chat-icon-close" style="width:24px;height:24px;"></i>
+    <span class="chat-unread-dot" id="chatUnreadDot"></span>
+  </button>
+
+  <!-- Chat panel -->
+  <div class="chat-panel" id="chatPanel">
+    <div class="chat-panel-header">
+      <div class="d-flex align-items-center gap-2">
+        <div class="chat-panel-avatar"><i data-lucide="bot" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="fw-semibold" style="font-size:13px;color:#fff;">StayMaster AI</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.6);">● Typically replies instantly</div>
+        </div>
+      </div>
+      <button class="chat-panel-close" id="chatPanelClose" aria-label="Close chat">
+        <i data-lucide="x" style="width:16px;height:16px;"></i>
+      </button>
+    </div>
+    <div class="chat-panel-messages" id="chatPanelMessages">
+      <div class="cp-msg ai">
+        <div class="cp-bubble">👋 Hi there! I'm the StayMaster AI. How can I help you today?</div>
+      </div>
+    </div>
+    <div class="chat-panel-quick">
+      <button class="quick-reply" data-msg="Tell me about pricing">💰 Pricing</button>
+      <button class="quick-reply" data-msg="How does the free trial work?">🎁 Free Trial</button>
+      <button class="quick-reply" data-msg="Book a demo">📅 Book Demo</button>
+      <button class="quick-reply" data-msg="What platforms do you integrate with?">🔗 Integrations</button>
+    </div>
+    <div class="chat-panel-input">
+      <input type="text" id="chatInput" placeholder="Type a message…" autocomplete="off" />
+      <button id="chatSend" aria-label="Send"><i data-lucide="send" style="width:15px;height:15px;"></i></button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     EXIT-INTENT POPUP
+============================================================ -->
+<div id="exit-overlay" class="exit-overlay" role="dialog" aria-modal="true" aria-label="Special offer">
+  <div class="exit-modal" data-aos="zoom-in" data-aos-duration="400">
+    <button class="exit-close" id="exitClose" aria-label="Close"><i data-lucide="x" style="width:18px;height:18px;"></i></button>
+    <div class="exit-badge">Wait — before you go!</div>
+    <div class="exit-icon"><i data-lucide="gift" style="width:44px;height:44px;color:var(--color-accent);"></i></div>
+    <h3 class="exit-headline">Get 30 Days Free<br><span class="text-accent">Instead of 14</span></h3>
+    <p class="exit-sub">Start your extended free trial today — no credit card, no commitment. Double the time to explore everything StayMaster Pro can do for your business.</p>
+    <form id="exitForm" class="exit-form" novalidate>
+      <input type="email" name="email" placeholder="Enter your work email" required class="exit-email-input" autocomplete="email" />
+      <span class="field-error" style="color:#fff;opacity:.85;font-size:.78rem;margin-top:4px;display:none;">Please enter a valid email</span>
+      <button type="submit" class="btn btn-accent w-100 py-2">
+        <i data-lucide="rocket" class="btn-icon me-2"></i>Claim My 30-Day Trial
+      </button>
+    </form>
+    <p class="exit-fine">No spam. Unsubscribe anytime.</p>
+  </div>
+</div>
+
+<!-- ============================================================
+     NAVIGATION
+============================================================ -->
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top" id="mainNav">
+  <div class="container">
+
+    <!-- Logo -->
+    <a class="navbar-brand d-flex align-items-center gap-2" href="#home">
+      <div class="brand-logo-icon">
+        <i data-lucide="home" class="brand-icon"></i>
+      </div>
+      <span class="brand-name">StayMaster <span class="brand-accent">Pro</span></span>
+    </a>
+
+    <!-- Mobile toggle (animated hamburger) -->
+    <button class="navbar-toggler border-0 hamburger-btn" type="button" data-bs-toggle="collapse" data-bs-target="#navContent" id="navToggler">
+      <span class="ham-line"></span>
+      <span class="ham-line"></span>
+      <span class="ham-line"></span>
+    </button>
+
+    <!-- Nav links + CTA -->
+    <div class="collapse navbar-collapse" id="navContent">
+      <ul class="navbar-nav mx-auto gap-1">
+        <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+        <li class="nav-item"><a class="nav-link" href="#pricing">Pricing</a></li>
+        <li class="nav-item"><a class="nav-link" href="#demo">Demo</a></li>
+        <li class="nav-item"><a class="nav-link" href="#ai-assistant">AI Assistant</a></li>
+        <li class="nav-item"><a class="nav-link" href="#testimonials">Testimonials</a></li>
+        <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
+        <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+      </ul>
+      <div class="d-flex gap-2 mt-3 mt-lg-0 align-items-center">
+        <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+          <i data-lucide="moon" class="dm-icon dm-moon" style="width:15px;height:15px;"></i>
+          <i data-lucide="sun"  class="dm-icon dm-sun d-none" style="width:15px;height:15px;"></i>
+        </button>
+        <a href="#" id="nav-trial-btn" class="btn btn-outline-light btn-sm px-3">Start Free Trial</a>
+        <a href="#" id="nav-demo-btn" class="btn btn-accent btn-sm px-3">Schedule Demo</a>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+<!-- ============================================================
+     HERO SECTION
+============================================================ -->
+<section id="home" class="hero-section">
+  <canvas id="heroParticles" class="hero-particles-canvas"></canvas>
+  <div class="hero-bg-overlay"></div>
+  <div class="container position-relative">
+    <div class="row align-items-center min-vh-80">
+
+      <!-- Hero Text -->
+      <div class="col-lg-6 hero-text">
+        <div class="hero-badge mb-3" data-aos="fade-down" data-aos-duration="600">
+          <i data-lucide="star" class="badge-icon"></i>
+          <span>Trusted by <span id="heroBadgeTicker" class="badge-ticker">1,000+</span> Property Managers Worldwide</span>
+        </div>
+        <h1 class="hero-headline" data-aos="fade-up" data-aos-duration="700" data-aos-delay="100" id="heroHeadline">
+          Manage Your Vacation Rentals <span class="text-accent">Smarter, Faster,</span> and More Profitably
+        </h1>
+        <p class="hero-subheadline mt-4" data-aos="fade-up" data-aos-duration="700" data-aos-delay="200">
+          All-in-one property management software for reservations, guest communication, cleaning, maintenance, owner reporting, upsells, payments, and multi-platform rental operations.
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="d-flex flex-wrap gap-3 mt-4" data-aos="fade-up" data-aos-duration="700" data-aos-delay="300">
+          <a href="#" id="hero-trial-btn" class="btn btn-accent btn-lg px-4">
+            <i data-lucide="rocket" class="btn-icon me-2"></i>Start Free Trial
+          </a>
+          <a href="#" id="hero-demo-btn" class="btn btn-outline-light btn-lg px-4">
+            <i data-lucide="play-circle" class="btn-icon me-2"></i>Book Live Demo
+          </a>
+          <a href="#" id="hero-ai-btn" class="btn btn-glass btn-lg px-4">
+            <i data-lucide="bot" class="btn-icon me-2"></i>Talk to AI Assistant
+          </a>
+        </div>
+
+        <!-- Trust Badges -->
+        <div class="trust-badges mt-4 d-flex flex-wrap gap-3" data-aos="fade-up" data-aos-duration="600" data-aos-delay="400">
+          <span class="trust-badge"><i data-lucide="check-circle" class="trust-icon"></i> No Credit Card Required</span>
+          <span class="trust-badge"><i data-lucide="check-circle" class="trust-icon"></i> Setup in Minutes</span>
+          <span class="trust-badge"><i data-lucide="check-circle" class="trust-icon"></i> Cloud-Based</span>
+          <span class="trust-badge"><i data-lucide="check-circle" class="trust-icon"></i> Mobile Friendly</span>
+        </div>
+
+        <!-- Lead Capture -->
+        <div class="hero-lead-form mt-4" data-aos="fade-up" data-aos-duration="600" data-aos-delay="500">
+          <form class="d-flex gap-2 flex-wrap" id="heroLeadForm" novalidate>
+            <div class="lead-field-wrap">
+              <input type="text" name="name" class="form-control lead-input" placeholder="Your Name" required autocomplete="name" />
+              <span class="field-error">Please enter your name</span>
+            </div>
+            <div class="lead-field-wrap">
+              <input type="email" name="email" class="form-control lead-input" placeholder="Work Email" required autocomplete="email" />
+              <span class="field-error">Please enter a valid email</span>
+            </div>
+            <button type="submit" class="btn btn-accent px-4">Get Started</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Hero Dashboard Mockup -->
+      <div class="col-lg-6 d-none d-lg-block" data-aos="fade-left" data-aos-duration="900" data-aos-delay="200">
+        <div class="hero-dashboard-card">
+          <div class="dashboard-header">
+            <div class="d-flex align-items-center gap-2">
+              <div class="dot dot-red"></div>
+              <div class="dot dot-yellow"></div>
+              <div class="dot dot-green"></div>
+              <span class="ms-2 small text-muted">StayMaster Pro Dashboard</span>
+            </div>
+          </div>
+          <div class="dashboard-body">
+            <div class="row g-2 mb-3">
+              <div class="col-4">
+                <div class="mini-stat-card">
+                  <div class="stat-num">24</div>
+                  <div class="stat-lbl">Properties</div>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="mini-stat-card accent">
+                  <div class="stat-num">87%</div>
+                  <div class="stat-lbl">Occupancy</div>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="mini-stat-card">
+                  <div class="stat-num">$18k</div>
+                  <div class="stat-lbl">Revenue</div>
+                </div>
+              </div>
+            </div>
+            <div class="dash-calendar mb-3">
+              <div class="cal-header">
+                <i data-lucide="calendar-days" class="me-1" style="width:14px;height:14px;"></i>
+                June 2026 — Reservations
+              </div>
+              <div class="cal-grid">
+                <div class="cal-day booked">12</div>
+                <div class="cal-day booked">13</div>
+                <div class="cal-day booked">14</div>
+                <div class="cal-day">15</div>
+                <div class="cal-day booked">16</div>
+                <div class="cal-day booked">17</div>
+                <div class="cal-day">18</div>
+                <div class="cal-day booked">19</div>
+                <div class="cal-day booked">20</div>
+                <div class="cal-day booked">21</div>
+                <div class="cal-day">22</div>
+                <div class="cal-day booked">23</div>
+                <div class="cal-day booked">24</div>
+                <div class="cal-day booked">25</div>
+              </div>
+            </div>
+            <div class="dash-tasks">
+              <div class="task-item done"><i data-lucide="check-circle" class="task-icon"></i> Villa Rosa — Cleaned & Ready</div>
+              <div class="task-item pending"><i data-lucide="clock" class="task-icon"></i> Apt 3B — Guest Check-in 3:00 PM</div>
+              <div class="task-item pending"><i data-lucide="message-circle" class="task-icon"></i> Auto-message sent to guest</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Wave divider -->
+<div class="wave-divider wave-hero">
+  <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,30 C360,60 1080,0 1440,30 L1440,60 L0,60 Z" fill="var(--color-primary)"/></svg>
+</div>
+
+<!-- ============================================================
+     STATS / SOCIAL PROOF
+============================================================ -->
+<section class="stats-section py-5">
+  <div class="container">
+    <div class="row g-4 text-center">
+      <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="0">
+        <div class="stat-item">
+          <div class="stat-number">1,000+</div>
+          <div class="stat-label">Properties Managed</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="100">
+        <div class="stat-item">
+          <div class="stat-number">50,000+</div>
+          <div class="stat-label">Reservations Processed</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="200">
+        <div class="stat-item">
+          <div class="stat-number">99.9%</div>
+          <div class="stat-label">Platform Uptime</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="300">
+        <div class="stat-item">
+          <div class="stat-number">40%</div>
+          <div class="stat-label">Admin Time Saved</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     HOW IT WORKS
+============================================================ -->
+<section class="section-padding how-it-works-section">
+  <div class="container">
+    <div class="section-header text-center mb-5" data-aos="fade-up">
+      <span class="section-tag">Get Started in Minutes</span>
+      <h2 class="section-title">How It Works</h2>
+      <p class="section-subtitle">From sign-up to fully operational in three simple steps.</p>
+    </div>
+    <div class="row g-4 justify-content-center">
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="hiw-card">
+          <div class="hiw-step-num">1</div>
+          <div class="hiw-icon-wrap">
+            <i data-lucide="user-plus" class="hiw-icon"></i>
+          </div>
+          <h5 class="hiw-title">Create Your Account</h5>
+          <p class="hiw-desc">Sign up in 60 seconds — no credit card required. Your 14-day free trial starts instantly with full access to every feature.</p>
+          <div class="hiw-connector d-none d-md-block"></div>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="hiw-card">
+          <div class="hiw-step-num">2</div>
+          <div class="hiw-icon-wrap">
+            <i data-lucide="home" class="hiw-icon"></i>
+          </div>
+          <h5 class="hiw-title">Add Your Properties</h5>
+          <p class="hiw-desc">Enter your properties, units, and existing reservations. Our onboarding wizard guides you through setup — most users are live in under an hour.</p>
+          <div class="hiw-connector d-none d-md-block"></div>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="hiw-card">
+          <div class="hiw-step-num">3</div>
+          <div class="hiw-icon-wrap hiw-icon-accent">
+            <i data-lucide="rocket" class="hiw-icon"></i>
+          </div>
+          <h5 class="hiw-title">Go Live &amp; Grow</h5>
+          <p class="hiw-desc">Automate guest messaging, assign cleaning tasks, track payments, and watch your revenue grow — all from one dashboard.</p>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-5" data-aos="fade-up" data-aos-delay="100">
+      <a href="#" id="hiw-trial-btn" class="btn btn-accent btn-lg px-5">
+        <i data-lucide="rocket" class="btn-icon me-2"></i>Start Free — No Card Needed
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     INTEGRATIONS LOGO STRIP
+============================================================ -->
+<section class="integrations-strip">
+  <div class="container">
+    <p class="integrations-label" data-aos="fade-up">Works alongside your favourite platforms</p>
+    <div class="integrations-logos" data-aos="fade-up" data-aos-delay="100">
+      <span class="platform-logo airbnb">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+        Airbnb
+      </span>
+      <span class="platform-logo vrbo">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        VRBO
+      </span>
+      <span class="platform-logo booking">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H8v-2h4v2zm4-4H8v-2h8v2zm0-4H8V7h8v2z"/></svg>
+        Booking.com
+      </span>
+      <span class="platform-logo expedia">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+        Expedia
+      </span>
+      <span class="platform-logo tripadvisor">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        TripAdvisor
+      </span>
+      <span class="platform-logo homeaway">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+        HomeAway
+      </span>
+      <span class="platform-logo stripe">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+        Stripe
+      </span>
+      <span class="platform-logo whatsapp">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896.002-3.176-1.24-6.165-3.48-8.45z"/></svg>
+        WhatsApp
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     STAR RATING BAR
+============================================================ -->
+<section class="rating-bar-section" data-aos="fade-up">
+  <div class="container">
+    <div class="rating-bar-inner">
+
+      <!-- Overall score -->
+      <div class="rating-score-block">
+        <div class="rating-big-num">4.9</div>
+        <div class="rating-stars-row">
+          <i data-lucide="star" class="rstar filled"></i>
+          <i data-lucide="star" class="rstar filled"></i>
+          <i data-lucide="star" class="rstar filled"></i>
+          <i data-lucide="star" class="rstar filled"></i>
+          <i data-lucide="star" class="rstar half"></i>
+        </div>
+        <div class="rating-count">Based on <strong>480+ reviews</strong></div>
+      </div>
+
+      <div class="rating-divider"></div>
+
+      <!-- Per-platform breakdown -->
+      <div class="rating-breakdown">
+        <div class="rating-row">
+          <span class="rating-platform">G2</span>
+          <div class="rating-bar-track"><div class="rating-bar-fill" style="width:96%"></div></div>
+          <span class="rating-val">4.9</span>
+        </div>
+        <div class="rating-row">
+          <span class="rating-platform">Capterra</span>
+          <div class="rating-bar-track"><div class="rating-bar-fill" style="width:94%"></div></div>
+          <span class="rating-val">4.8</span>
+        </div>
+        <div class="rating-row">
+          <span class="rating-platform">Product Hunt</span>
+          <div class="rating-bar-track"><div class="rating-bar-fill" style="width:100%"></div></div>
+          <span class="rating-val">5.0</span>
+        </div>
+        <div class="rating-row">
+          <span class="rating-platform">Trustpilot</span>
+          <div class="rating-bar-track"><div class="rating-bar-fill" style="width:92%"></div></div>
+          <span class="rating-val">4.7</span>
+        </div>
+      </div>
+
+      <div class="rating-divider"></div>
+
+      <!-- Quick badges -->
+      <div class="rating-badges">
+        <div class="rating-badge-item">
+          <i data-lucide="award" class="rb-icon"></i>
+          <span>Leader<br><small>Summer 2026</small></span>
+        </div>
+        <div class="rating-badge-item">
+          <i data-lucide="thumbs-up" class="rb-icon"></i>
+          <span>Easiest Setup<br><small>G2 · 2026</small></span>
+        </div>
+        <div class="rating-badge-item">
+          <i data-lucide="shield-check" class="rb-icon"></i>
+          <span>Most Loved<br><small>Capterra</small></span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FEATURES SECTION
+============================================================ -->
+<section id="features" class="section-padding bg-sand">
+  <div class="container">
+    <div class="section-header text-center mb-5" data-aos="fade-up">
+      <span class="section-tag">Everything You Need</span>
+      <h2 class="section-title">Powerful Features for Modern Property Management</h2>
+      <p class="section-subtitle">One platform to manage every aspect of your vacation rental business — from reservations to reviews.</p>
+    </div>
+
+    <div class="row g-4">
+      <!-- Feature Card -->
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="feature-card h-100">
+          <div class="feature-icon-wrap">
+            <i data-lucide="home" class="feature-icon"></i>
+          </div>
+          <h5 class="feature-title">Centralized Property Dashboard</h5>
+          <p class="feature-desc">View all your properties, units, and their status in one clean dashboard. Never lose track of what's happening across your portfolio.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="feature-card h-100">
+          <div class="feature-icon-wrap">
+            <i data-lucide="calendar-days" class="feature-icon"></i>
+          </div>
+          <h5 class="feature-title">Smart Booking Calendar</h5>
+          <p class="feature-desc">Visual multi-property reservation calendar with drag-and-drop, availability management, and conflict detection across all platforms.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="feature-card h-100">
+          <div class="feature-icon-wrap">
+            <i data-lucide="message-circle" class="feature-icon"></i>
+          </div>
+          <h5 class="feature-title">Automated Guest Communication</h5>
+          <p class="feature-desc">Pre-arrival, check-in, during-stay, post-stay, and review request messages sent automatically. Delight guests without lifting a finger.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="feature-card h-100">
+          <div class="feature-icon-wrap">
+            <i data-lucide="users" class="feature-icon"></i>
+          </div>
+          <h5 class="feature-title">Guest Profiles & History</h5>
+          <p class="feature-desc">Build rich guest profiles with stay history, preferences, notes, and communication logs to deliver personalized experiences every time.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="feature-card h-100">
+          <div class="feature-icon-wrap">
+            <i data-lucide="clipboard-check" class="feature-icon"></i>
+          </div>
+          <h5 class="feature-title">Cleaning Task Management</h5>
+          <p class="feature-desc">Assign cleaning tasks, track completion status, attach checklists, and get notified the moment a property is ready for the next guest.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="feature-card h-100">
+          <div class="feature-icon-wrap">
+            <i data-lucide="wrench" class="feature-icon"></i>
+          </div>
+          <h5 class="feature-title">Maintenance Tracking</h5>
+          <p class="feature-desc">Log maintenance requests, assign to vendors, set priorities, and track resolution — keeping your properties in peak condition.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="feature-card h-100">
+          <div class="feature-icon-wrap">
+            <i data-lucide="credit-card" class="feature-icon"></i>
+          </div>
+          <h5 class="feature-title">Payment Tracking</h5>
+          <p class="feature-desc">Track deposits, balances, payments received, and outstanding amounts. Know exactly where every dollar stands across all reservations.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="feature-card h-100">
+          <div class="feature-icon-wrap">
+            <i data-lucide="bar-chart-3" class="feature-icon"></i>
+          </div>
+          <h5 class="feature-title">Owner Reporting</h5>
+          <p class="feature-desc">Generate professional owner statements with occupancy, revenue, expenses, and property performance metrics — keep your owners informed and happy.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="feature-card h-100">
+          <div class="feature-icon-wrap">
+            <i data-lucide="shield-check" class="feature-icon"></i>
+          </div>
+          <h5 class="feature-title">Staff Roles & Permissions</h5>
+          <p class="feature-desc">Control who sees and does what. Set granular permissions for managers, cleaners, maintenance staff, and owner-facing roles.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="feature-card h-100">
+          <div class="feature-icon-wrap">
+            <i data-lucide="key-round" class="feature-icon"></i>
+          </div>
+          <h5 class="feature-title">Digital Check-In</h5>
+          <p class="feature-desc">Guests complete check-in forms digitally before arrival. Collect IDs, signatures, agreements, and emergency contacts automatically.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="feature-card h-100">
+          <div class="feature-icon-wrap">
+            <i data-lucide="file-text" class="feature-icon"></i>
+          </div>
+          <h5 class="feature-title">Document Uploads</h5>
+          <p class="feature-desc">Store property documents, contracts, licenses, photos, and guest IDs securely — accessible from anywhere, at any time.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="feature-card h-100">
+          <div class="feature-icon-wrap">
+            <i data-lucide="smartphone" class="feature-icon"></i>
+          </div>
+          <h5 class="feature-title">Mobile-Friendly Admin Panel</h5>
+          <p class="feature-desc">Manage your entire business from your phone. Responsive design works perfectly on any device, anywhere in the world.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     VIDEO DEMO SECTION
+============================================================ -->
+<section class="section-padding video-section">
+  <div class="container">
+    <div class="section-header text-center mb-5" data-aos="fade-up">
+      <span class="section-tag-light">See It In Action</span>
+      <h2 class="section-title text-white mt-2">Watch How StayMaster Pro Works</h2>
+      <p class="text-white-50">A 2-minute walkthrough of the platform — from dashboard to automated guest communication.</p>
+    </div>
+    <div class="video-frame-wrap" data-aos="zoom-in" data-aos-duration="700">
+      <div class="video-placeholder" id="videoPoster">
+        <div class="video-thumbnail-overlay"></div>
+        <div class="video-play-btn" id="videoPlayBtn">
+          <i data-lucide="play" style="width:28px;height:28px;color:#fff;margin-left:3px;"></i>
+        </div>
+        <div class="video-meta">
+          <span class="video-duration"><i data-lucide="clock" style="width:12px;height:12px;"></i> 2:14</span>
+          <span class="video-caption">StayMaster Pro — Full Platform Demo</span>
+        </div>
+      </div>
+      <!-- Embed loads on click to avoid autoplay/privacy issues -->
+      <div class="video-embed d-none" id="videoEmbed">
+        <iframe
+          src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0"
+          title="StayMaster Pro Demo"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          style="width:100%;height:100%;border:0;">
+        </iframe>
+      </div>
+    </div>
+    <div class="row g-4 mt-5 justify-content-center">
+      <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="0">
+        <div class="video-stat"><div class="video-stat-num">2 min</div><div class="video-stat-lbl">Quick overview</div></div>
+      </div>
+      <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="100">
+        <div class="video-stat"><div class="video-stat-num">12+</div><div class="video-stat-lbl">Features covered</div></div>
+      </div>
+      <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="200">
+        <div class="video-stat"><div class="video-stat-num">Live</div><div class="video-stat-lbl">Real platform demo</div></div>
+      </div>
+      <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="300">
+        <div class="video-stat"><div class="video-stat-num">Free</div><div class="video-stat-lbl">No sign-up to watch</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     WHY CHOOSE US
+============================================================ -->
+<section class="section-padding bg-white">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-5" data-aos="fade-right" data-aos-duration="800">
+        <span class="section-tag">Why StayMaster Pro</span>
+        <h2 class="section-title mt-2">Built for Vacation Rentals. Period.</h2>
+        <p class="text-muted mt-3">Unlike generic project management tools, StayMaster Pro was designed from the ground up for the unique challenges of short-term rental management.</p>
+        <div class="why-list mt-4">
+          <div class="why-item">
+            <i data-lucide="check-circle" class="why-icon"></i>
+            <div>
+              <strong>Built specifically for vacation rentals</strong>
+              <p class="mb-0 text-muted small">Every feature was designed with STR operators in mind.</p>
+            </div>
+          </div>
+          <div class="why-item">
+            <i data-lucide="check-circle" class="why-icon"></i>
+            <div>
+              <strong>Reduces manual admin work by up to 40%</strong>
+              <p class="mb-0 text-muted small">Automation handles the repetitive tasks so you don't have to.</p>
+            </div>
+          </div>
+          <div class="why-item">
+            <i data-lucide="check-circle" class="why-icon"></i>
+            <div>
+              <strong>Improves guest experience & reviews</strong>
+              <p class="mb-0 text-muted small">Consistent, professional communication delights guests every stay.</p>
+            </div>
+          </div>
+          <div class="why-item">
+            <i data-lucide="check-circle" class="why-icon"></i>
+            <div>
+              <strong>Increases revenue through upsells</strong>
+              <p class="mb-0 text-muted small">Structured upsell management adds hundreds per booking.</p>
+            </div>
+          </div>
+          <div class="why-item">
+            <i data-lucide="check-circle" class="why-icon"></i>
+            <div>
+              <strong>Keeps owners informed & confident</strong>
+              <p class="mb-0 text-muted small">Professional reports build trust with property owners.</p>
+            </div>
+          </div>
+          <div class="why-item">
+            <i data-lucide="check-circle" class="why-icon"></i>
+            <div>
+              <strong>Scales with your business</strong>
+              <p class="mb-0 text-muted small">From 1 property to 100+, StayMaster Pro grows with you.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-7" data-aos="fade-left" data-aos-duration="800">
+        <div class="revenue-impact-card">
+          <h4 class="mb-4"><i data-lucide="trending-up" class="me-2 text-accent-color"></i>Revenue Impact</h4>
+          <p class="text-muted mb-4">StayMaster Pro isn't just an organizational tool — it directly impacts your bottom line:</p>
+          <div class="row g-3">
+            <div class="col-6">
+              <div class="impact-item">
+                <div class="impact-icon"><i data-lucide="clock" class=""></i></div>
+                <strong>Save 10+ hrs/week</strong>
+                <p class="small text-muted mb-0">On repetitive admin tasks</p>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="impact-item">
+                <div class="impact-icon"><i data-lucide="star" class=""></i></div>
+                <strong>Higher Review Scores</strong>
+                <p class="small text-muted mb-0">Consistent guest communication</p>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="impact-item">
+                <div class="impact-icon"><i data-lucide="dollar-sign" class=""></i></div>
+                <strong>+$200–$800/booking</strong>
+                <p class="small text-muted mb-0">From structured upsells</p>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="impact-item">
+                <div class="impact-icon"><i data-lucide="bar-chart-3" class=""></i></div>
+                <strong>Better Occupancy</strong>
+                <p class="small text-muted mb-0">Insights-driven rate management</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Upsell Examples -->
+          <div class="mt-4">
+            <h6 class="mb-3 fw-semibold">Popular Upsell Items You Can Offer:</h6>
+            <div class="upsell-grid">
+              <span class="upsell-tag"><i data-lucide="car" class="upsell-tag-icon"></i> Airport Transfer</span>
+              <span class="upsell-tag"><i data-lucide="sun" class="upsell-tag-icon"></i> Early Check-in</span>
+              <span class="upsell-tag"><i data-lucide="moon" class="upsell-tag-icon"></i> Late Check-out</span>
+              <span class="upsell-tag"><i data-lucide="shopping-bag" class="upsell-tag-icon"></i> Grocery Package</span>
+              <span class="upsell-tag"><i data-lucide="wine" class="upsell-tag-icon"></i> Champagne Package</span>
+              <span class="upsell-tag"><i data-lucide="utensils" class="upsell-tag-icon"></i> Private Chef</span>
+              <span class="upsell-tag"><i data-lucide="key" class="upsell-tag-icon"></i> Car Rental</span>
+              <span class="upsell-tag"><i data-lucide="umbrella" class="upsell-tag-icon"></i> Beach Chairs</span>
+              <span class="upsell-tag"><i data-lucide="baby" class="upsell-tag-icon"></i> Baby Crib</span>
+              <span class="upsell-tag"><i data-lucide="heart" class="upsell-tag-icon"></i> Romantic Setup</span>
+              <span class="upsell-tag"><i data-lucide="sparkles" class="upsell-tag-icon"></i> Extra Cleaning</span>
+              <span class="upsell-tag"><i data-lucide="map" class="upsell-tag-icon"></i> Tour Bookings</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     COMPETITOR COMPARISON
+============================================================ -->
+<section class="section-padding bg-sand">
+  <div class="container">
+    <div class="section-header text-center mb-5" data-aos="fade-up">
+      <span class="section-tag">How We Compare</span>
+      <h2 class="section-title">StayMaster Pro vs. The Competition</h2>
+      <p class="section-subtitle">See why property managers switch to StayMaster Pro from other tools.</p>
+    </div>
+    <div class="table-responsive" data-aos="fade-up" data-aos-delay="100">
+      <table class="table comp-vs-table text-center">
+        <thead>
+          <tr>
+            <th class="text-start">Feature</th>
+            <th class="smp-col"><span class="smp-badge">StayMaster Pro</span></th>
+            <th>Guesty</th>
+            <th>Lodgify</th>
+            <th>Hostfully</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="text-start fw-medium">Starting Price</td><td class="smp-col fw-bold text-secondary">$49/mo</td><td>$$$+ / custom</td><td>$13/mo*</td><td>$$$ / custom</td></tr>
+          <tr><td class="text-start fw-medium">Free Trial</td><td class="smp-col"><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="x-circle" class="no-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="x-circle" class="no-icon"></i></td></tr>
+          <tr><td class="text-start fw-medium">No Credit Card Required</td><td class="smp-col"><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="x-circle" class="no-icon"></i></td><td><i data-lucide="x-circle" class="no-icon"></i></td><td><i data-lucide="x-circle" class="no-icon"></i></td></tr>
+          <tr><td class="text-start fw-medium">Built-in Upsell Management</td><td class="smp-col"><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="x-circle" class="no-icon"></i></td><td><i data-lucide="x-circle" class="no-icon"></i></td><td><i data-lucide="x-circle" class="no-icon"></i></td></tr>
+          <tr><td class="text-start fw-medium">AI Assistant Included</td><td class="smp-col"><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="x-circle" class="no-icon"></i></td><td><i data-lucide="x-circle" class="no-icon"></i></td><td><i data-lucide="x-circle" class="no-icon"></i></td></tr>
+          <tr><td class="text-start fw-medium">Owner Reporting</td><td class="smp-col"><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="x-circle" class="no-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td></tr>
+          <tr><td class="text-start fw-medium">Automated Guest Messaging</td><td class="smp-col"><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td></tr>
+          <tr><td class="text-start fw-medium">Cleaning Task Management</td><td class="smp-col"><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="x-circle" class="no-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td></tr>
+          <tr><td class="text-start fw-medium">WhatsApp Automation</td><td class="smp-col"><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="x-circle" class="no-icon"></i></td><td><i data-lucide="x-circle" class="no-icon"></i></td><td><i data-lucide="x-circle" class="no-icon"></i></td></tr>
+          <tr><td class="text-start fw-medium">Dedicated Support</td><td class="smp-col"><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="x-circle" class="no-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td></tr>
+          <tr><td class="text-start fw-medium">Setup in &lt; 1 Hour</td><td class="smp-col"><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="x-circle" class="no-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="x-circle" class="no-icon"></i></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text-center text-muted small mt-3">* Competitor pricing based on publicly available plans. Features may vary. Last updated June 2026.</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     AI ASSISTANT SECTION
+============================================================ -->
+<section id="ai-assistant" class="section-padding ai-section">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6" data-aos="fade-right" data-aos-duration="800">
+        <span class="section-tag-light">AI-Powered</span>
+        <h2 class="section-title text-white mt-2">Your 24/7 AI Property Management Assistant</h2>
+        <p class="text-white-50 mt-3 mb-4">The AI Assistant helps property managers answer guest questions, automate communication, provide booking information, recommend upsells, and support daily operations — around the clock, in multiple languages.</p>
+
+        <div class="ai-features-list">
+          <div class="ai-feature-item">
+            <i data-lucide="message-circle" class="ai-feat-icon"></i>
+            <span>Guest communication automation</span>
+          </div>
+          <div class="ai-feature-item">
+            <i data-lucide="calendar-days" class="ai-feat-icon"></i>
+            <span>Instant booking answers & reservation lookup</span>
+          </div>
+          <div class="ai-feature-item">
+            <i data-lucide="help-circle" class="ai-feat-icon"></i>
+            <span>FAQ handling & property information</span>
+          </div>
+          <div class="ai-feature-item">
+            <i data-lucide="shopping-bag" class="ai-feat-icon"></i>
+            <span>Upsell recommendations & add-on suggestions</span>
+          </div>
+          <div class="ai-feature-item">
+            <i data-lucide="globe" class="ai-feat-icon"></i>
+            <span>Multi-language support</span>
+          </div>
+          <div class="ai-feature-item">
+            <i data-lucide="users" class="ai-feat-icon"></i>
+            <span>Internal staff assistance & escalation to human support</span>
+          </div>
+        </div>
+
+        <a href="#" id="ai-launch-btn" class="btn btn-accent btn-lg mt-4 px-4">
+          <i data-lucide="bot" class="btn-icon me-2"></i>Launch AI Assistant
+        </a>
+      </div>
+
+      <!-- Chat Mockup -->
+      <div class="col-lg-6" data-aos="fade-left" data-aos-duration="800" data-aos-delay="100">
+        <div class="chat-mockup">
+          <div class="chat-header">
+            <div class="d-flex align-items-center gap-2">
+              <div class="chat-avatar"><i data-lucide="bot" style="width:16px;height:16px;"></i></div>
+              <div>
+                <div class="fw-semibold" style="font-size:13px;">StayMaster AI</div>
+                <div class="text-success" style="font-size:11px;">● Online 24/7</div>
+              </div>
+            </div>
+          </div>
+          <div class="chat-messages">
+            <div class="chat-msg ai">
+              <div class="chat-bubble">Hi! I'm your StayMaster AI Assistant. How can I help you today?</div>
+              <div class="chat-time">10:02 AM</div>
+            </div>
+            <div class="chat-msg guest">
+              <div class="chat-bubble">Can I check in early?</div>
+              <div class="chat-time">10:03 AM</div>
+            </div>
+            <div class="chat-msg ai">
+              <div class="chat-bubble">Early check-in is available from 1:00 PM for an additional fee of $25. Would you like me to add this to your reservation?</div>
+              <div class="chat-time">10:03 AM</div>
+            </div>
+            <div class="chat-msg guest">
+              <div class="chat-bubble">Yes please! Also, is there parking available?</div>
+              <div class="chat-time">10:04 AM</div>
+            </div>
+            <div class="chat-msg ai">
+              <div class="chat-bubble">Great! I've noted the early check-in for your booking. ✅ Free covered parking is available on-site for 1 vehicle.</div>
+              <div class="chat-time">10:04 AM</div>
+            </div>
+            <div class="chat-msg ai" id="typing-indicator">
+              <div class="chat-bubble typing-bubble">
+                <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>
+              </div>
+            </div>
+          </div>
+          <div class="chat-input">
+            <input type="text" class="form-control" placeholder="Type a message..." disabled />
+            <button class="btn btn-secondary btn-sm ms-2" disabled><i data-lucide="send" style="width:14px;height:14px;"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PRICING SECTION
+============================================================ -->
+<section id="pricing" class="section-padding bg-sand">
+  <div class="container">
+    <div class="section-header text-center mb-5" data-aos="fade-up">
+      <span class="section-tag">Simple, Transparent Pricing</span>
+      <h2 class="section-title">Choose the Plan That Fits Your Business</h2>
+      <p class="section-subtitle">All plans include a 14-day free trial. No credit card required.</p>
+
+      <!-- Billing toggle -->
+      <div class="billing-toggle mt-4" data-aos="fade-up" data-aos-delay="100">
+        <span class="toggle-label" id="label-monthly">Monthly</span>
+        <button class="toggle-switch" id="billingToggle" role="switch" aria-checked="false" aria-label="Toggle annual billing">
+          <span class="toggle-knob"></span>
+        </button>
+        <span class="toggle-label" id="label-annual">Annual <span class="save-badge">Save 20%</span></span>
+      </div>
+    </div>
+
+    <!-- Pricing Cards -->
+    <div class="row g-4 justify-content-center mb-5">
+
+      <!-- Starter -->
+      <div class="col-md-6 col-xl-3" data-aos="fade-up" data-aos-delay="0">
+        <div class="pricing-card h-100">
+          <div class="pricing-plan-name">Starter</div>
+          <div class="pricing-price" data-monthly="$49" data-annual="$39">$49<span>/mo</span></div>
+          <div class="pricing-desc">Best for individual hosts with 1–2 units.</div>
+          <ul class="pricing-features">
+            <li><i data-lucide="check" class="check-icon"></i>2 Properties/Units</li>
+            <li><i data-lucide="check" class="check-icon"></i>Reservation Calendar</li>
+            <li><i data-lucide="check" class="check-icon"></i>Guest Database</li>
+            <li><i data-lucide="check" class="check-icon"></i>Basic Communication Templates</li>
+            <li><i data-lucide="check" class="check-icon"></i>Basic Task Management</li>
+            <li><i data-lucide="check" class="check-icon"></i>Revenue Overview</li>
+            <li><i data-lucide="check" class="check-icon"></i>Email Support</li>
+          </ul>
+          <a href="#" class="btn btn-outline-primary w-100 pricing-btn" data-plan="starter">Start Free Trial</a>
+        </div>
+      </div>
+
+      <!-- Growth (Popular) -->
+      <div class="col-md-6 col-xl-3" data-aos="fade-up" data-aos-delay="100">
+        <div class="pricing-card pricing-popular h-100">
+          <div class="popular-badge">Most Popular</div>
+          <div class="pricing-plan-name">Growth</div>
+          <div class="pricing-price" data-monthly="$149" data-annual="$119">$149<span>/mo</span></div>
+          <div class="pricing-desc">Best for growing hosts and small property managers.</div>
+          <ul class="pricing-features">
+            <li><i data-lucide="check" class="check-icon"></i>Up to 10 Properties/Units</li>
+            <li><i data-lucide="check" class="check-icon"></i>Automated Guest Messaging</li>
+            <li><i data-lucide="check" class="check-icon"></i>Cleaning Schedule</li>
+            <li><i data-lucide="check" class="check-icon"></i>Maintenance Tracking</li>
+            <li><i data-lucide="check" class="check-icon"></i>Upsell Management</li>
+            <li><i data-lucide="check" class="check-icon"></i>Owner Reports</li>
+            <li><i data-lucide="check" class="check-icon"></i>Staff Accounts</li>
+            <li><i data-lucide="check" class="check-icon"></i>Payment Tracking</li>
+            <li><i data-lucide="check" class="check-icon"></i>Priority Support</li>
+          </ul>
+          <a href="#" class="btn btn-accent w-100 pricing-btn" data-plan="growth">Start Free Trial</a>
+        </div>
+      </div>
+
+      <!-- Professional -->
+      <div class="col-md-6 col-xl-3" data-aos="fade-up" data-aos-delay="200">
+        <div class="pricing-card h-100">
+          <div class="pricing-plan-name">Professional</div>
+          <div class="pricing-price" data-monthly="$299" data-annual="$239">$299<span>/mo</span></div>
+          <div class="pricing-desc">Best for professional property managers.</div>
+          <ul class="pricing-features">
+            <li><i data-lucide="check" class="check-icon"></i>Up to 30 Properties/Units</li>
+            <li><i data-lucide="check" class="check-icon"></i>Advanced Reporting Dashboard</li>
+            <li><i data-lucide="check" class="check-icon"></i>Multi-User Roles & Permissions</li>
+            <li><i data-lucide="check" class="check-icon"></i>Digital Check-In Forms</li>
+            <li><i data-lucide="check" class="check-icon"></i>Document Uploads</li>
+            <li><i data-lucide="check" class="check-icon"></i>Advanced Guest Communication</li>
+            <li><i data-lucide="check" class="check-icon"></i>Audit Logs</li>
+            <li><i data-lucide="check" class="check-icon"></i>Custom Branding</li>
+            <li><i data-lucide="check" class="check-icon"></i>WhatsApp/Email Workflows</li>
+            <li><i data-lucide="check" class="check-icon"></i>Priority Onboarding</li>
+          </ul>
+          <a href="#" class="btn btn-outline-primary w-100 pricing-btn" data-plan="professional">Start Free Trial</a>
+        </div>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="col-md-6 col-xl-3" data-aos="fade-up" data-aos-delay="300">
+        <div class="pricing-card h-100">
+          <div class="pricing-plan-name">Enterprise</div>
+          <div class="pricing-price">Custom</div>
+          <div class="pricing-desc">For large operators, boutique hotels, and villa management companies.</div>
+          <ul class="pricing-features">
+            <li><i data-lucide="check" class="check-icon"></i>Unlimited Properties</li>
+            <li><i data-lucide="check" class="check-icon"></i>Custom Workflows</li>
+            <li><i data-lucide="check" class="check-icon"></i>Advanced Integrations</li>
+            <li><i data-lucide="check" class="check-icon"></i>Custom Reporting</li>
+            <li><i data-lucide="check" class="check-icon"></i>Dedicated Support</li>
+            <li><i data-lucide="check" class="check-icon"></i>Data Migration</li>
+            <li><i data-lucide="check" class="check-icon"></i>SLA Options</li>
+            <li><i data-lucide="check" class="check-icon"></i>Custom Permissions</li>
+            <li><i data-lucide="check" class="check-icon"></i>White-Label Options</li>
+          </ul>
+          <a href="#contact" class="btn btn-outline-primary w-100 pricing-btn">Contact Sales</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparison Table -->
+    <div class="comparison-section">
+      <h4 class="text-center mb-4 fw-bold">Plan Comparison</h4>
+      <div class="table-responsive">
+        <table class="table comparison-table text-center">
+          <thead>
+            <tr>
+              <th class="text-start feature-col">Feature</th>
+              <th>Starter<br/><small class="text-muted">$49/mo</small></th>
+              <th class="popular-col">Growth<br/><small>$149/mo</small></th>
+              <th>Professional<br/><small class="text-muted">$299/mo</small></th>
+              <th>Enterprise<br/><small class="text-muted">Custom</small></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="text-start fw-medium">Properties/Units</td><td>2</td><td class="popular-col">10</td><td>30</td><td>Unlimited</td></tr>
+            <tr><td class="text-start fw-medium">Reservation Calendar</td><td><i data-lucide="check-circle" class="yes-icon"></i></td><td class="popular-col"><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td></tr>
+            <tr><td class="text-start fw-medium">Guest Database</td><td><i data-lucide="check-circle" class="yes-icon"></i></td><td class="popular-col"><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td></tr>
+            <tr><td class="text-start fw-medium">Automated Messaging</td><td><i data-lucide="x-circle" class="no-icon"></i></td><td class="popular-col"><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td></tr>
+            <tr><td class="text-start fw-medium">Cleaning Schedule</td><td><i data-lucide="x-circle" class="no-icon"></i></td><td class="popular-col"><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td></tr>
+            <tr><td class="text-start fw-medium">Maintenance Tracking</td><td><i data-lucide="x-circle" class="no-icon"></i></td><td class="popular-col"><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td></tr>
+            <tr><td class="text-start fw-medium">Upsell Management</td><td><i data-lucide="x-circle" class="no-icon"></i></td><td class="popular-col"><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td></tr>
+            <tr><td class="text-start fw-medium">Owner Reports</td><td><i data-lucide="x-circle" class="no-icon"></i></td><td class="popular-col"><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td></tr>
+            <tr><td class="text-start fw-medium">Payment Tracking</td><td><i data-lucide="x-circle" class="no-icon"></i></td><td class="popular-col"><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td></tr>
+            <tr><td class="text-start fw-medium">Staff Accounts</td><td><i data-lucide="x-circle" class="no-icon"></i></td><td class="popular-col"><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td></tr>
+            <tr><td class="text-start fw-medium">Advanced Reporting</td><td><i data-lucide="x-circle" class="no-icon"></i></td><td class="popular-col"><i data-lucide="x-circle" class="no-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td></tr>
+            <tr><td class="text-start fw-medium">Digital Check-In</td><td><i data-lucide="x-circle" class="no-icon"></i></td><td class="popular-col"><i data-lucide="x-circle" class="no-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td></tr>
+            <tr><td class="text-start fw-medium">Audit Logs</td><td><i data-lucide="x-circle" class="no-icon"></i></td><td class="popular-col"><i data-lucide="x-circle" class="no-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td></tr>
+            <tr><td class="text-start fw-medium">Custom Branding</td><td><i data-lucide="x-circle" class="no-icon"></i></td><td class="popular-col"><i data-lucide="x-circle" class="no-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td></tr>
+            <tr><td class="text-start fw-medium">White-Label</td><td><i data-lucide="x-circle" class="no-icon"></i></td><td class="popular-col"><i data-lucide="x-circle" class="no-icon"></i></td><td><i data-lucide="x-circle" class="no-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td></tr>
+            <tr><td class="text-start fw-medium">Dedicated Support</td><td><i data-lucide="x-circle" class="no-icon"></i></td><td class="popular-col"><i data-lucide="x-circle" class="no-icon"></i></td><td><i data-lucide="x-circle" class="no-icon"></i></td><td><i data-lucide="check-circle" class="yes-icon"></i></td></tr>
+            <tr><td class="text-start fw-medium">Support Level</td><td>Email</td><td class="popular-col">Priority</td><td>Priority + Onboarding</td><td>Dedicated</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Add-ons -->
+    <div class="addons-section mt-5">
+      <h4 class="text-center mb-4 fw-bold">Available Add-Ons</h4>
+      <div class="row g-3 justify-content-center">
+        <div class="col-sm-6 col-md-4 col-lg-3"><div class="addon-card"><strong>Extra Unit</strong><span>$10/mo per unit</span></div></div>
+        <div class="col-sm-6 col-md-4 col-lg-3"><div class="addon-card"><strong>Website Booking Page</strong><span>$49/mo</span></div></div>
+        <div class="col-sm-6 col-md-4 col-lg-3"><div class="addon-card"><strong>WhatsApp Automation</strong><span>$39/mo</span></div></div>
+        <div class="col-sm-6 col-md-4 col-lg-3"><div class="addon-card"><strong>Owner Portal</strong><span>$79/mo</span></div></div>
+        <div class="col-sm-6 col-md-4 col-lg-3"><div class="addon-card"><strong>Advanced Financial Reports</strong><span>$49/mo</span></div></div>
+        <div class="col-sm-6 col-md-4 col-lg-3"><div class="addon-card"><strong>Setup & Onboarding</strong><span>$350–$1,500</span></div></div>
+        <div class="col-sm-6 col-md-4 col-lg-3"><div class="addon-card"><strong>Custom Development</strong><span>From $75/hr</span></div></div>
+      </div>
+    </div>
+
+    <!-- Lead form under pricing -->
+    <div class="text-center mt-5">
+      <p class="text-muted mb-3">Not sure which plan is right for you? Get a free recommendation.</p>
+      <form class="d-flex justify-content-center gap-2 flex-wrap" id="pricingLeadForm" novalidate>
+        <div class="lead-field-wrap">
+          <input type="text" name="name" class="form-control lead-input" style="max-width:200px;" placeholder="Your Name" required autocomplete="name" />
+          <span class="field-error">Please enter your name</span>
+        </div>
+        <div class="lead-field-wrap">
+          <input type="email" name="email" class="form-control lead-input" style="max-width:240px;" placeholder="Work Email" required autocomplete="email" />
+          <span class="field-error">Please enter a valid email</span>
+        </div>
+        <button type="submit" class="btn btn-primary px-4">Get Recommendation</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FREE TRIAL SECTION
+============================================================ -->
+<section class="trial-section section-padding">
+  <div class="container">
+    <div class="trial-card text-center" data-aos="zoom-in" data-aos-duration="700">
+      <div class="trial-icon mb-3"><i data-lucide="gift" style="width:48px;height:48px;color:var(--color-accent);"></i></div>
+      <h2 class="text-white fw-bold mb-3">Try StayMaster Pro Free for 14 Days</h2>
+      <p class="text-white-50 mb-4 fs-5">No commitment. No credit card. Full access from day one.</p>
+      <div class="row g-3 justify-content-center mb-4">
+        <div class="col-auto"><span class="trial-badge"><i data-lucide="check-circle" class="me-1" style="width:16px;height:16px;"></i>Full Access</span></div>
+        <div class="col-auto"><span class="trial-badge"><i data-lucide="check-circle" class="me-1" style="width:16px;height:16px;"></i>No Credit Card Required</span></div>
+        <div class="col-auto"><span class="trial-badge"><i data-lucide="check-circle" class="me-1" style="width:16px;height:16px;"></i>Cancel Anytime</span></div>
+        <div class="col-auto"><span class="trial-badge"><i data-lucide="check-circle" class="me-1" style="width:16px;height:16px;"></i>Setup Assistance Included</span></div>
+      </div>
+      <a href="#" id="trial-cta-btn" class="btn btn-accent btn-lg px-5">
+        <i data-lucide="rocket" class="btn-icon me-2"></i>Start Free Trial
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     DEMO SECTION
+============================================================ -->
+<section id="demo" class="section-padding bg-white">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-5" data-aos="fade-right" data-aos-duration="800">
+        <span class="section-tag">See It In Action</span>
+        <h2 class="section-title mt-2">Schedule a Personalized Demo</h2>
+        <p class="text-muted mt-3 mb-4">See exactly how StayMaster Pro works for your specific business. Our team will walk you through the platform and answer all your questions live.</p>
+        <div class="demo-features">
+          <div class="demo-feature-item">
+            <i data-lucide="check-circle" class="demo-check"></i>
+            <span>30-minute live walkthrough</span>
+          </div>
+          <div class="demo-feature-item">
+            <i data-lucide="check-circle" class="demo-check"></i>
+            <span>Tailored to your property type</span>
+          </div>
+          <div class="demo-feature-item">
+            <i data-lucide="check-circle" class="demo-check"></i>
+            <span>Q&A with a real product expert</span>
+          </div>
+          <div class="demo-feature-item">
+            <i data-lucide="check-circle" class="demo-check"></i>
+            <span>No sales pressure — just value</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-7" data-aos="fade-left" data-aos-duration="800" data-aos-delay="100">
+        <div class="demo-booking-card">
+          <div class="demo-calendar-placeholder">
+            <i data-lucide="calendar-days" style="width:48px;height:48px;color:var(--color-secondary);"></i>
+            <h5 class="mt-3 fw-semibold">Schedule Your Demo</h5>
+            <p class="text-muted small mb-4">Select a convenient time for your personalized demo session.</p>
+            <a href="#" id="demo-schedule-btn" class="btn btn-primary btn-lg px-4">
+              <i data-lucide="calendar-days" class="btn-icon me-2"></i>Schedule Your Personalized Demo
+            </a>
+            <p class="text-muted small mt-3">Available Monday–Friday · 9 AM – 6 PM EST</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PRESS / AS SEEN IN
+============================================================ -->
+<section class="press-section" data-aos="fade-up">
+  <div class="container">
+    <p class="press-label">As featured in</p>
+    <div class="press-logos">
+      <span class="press-logo">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" opacity="0.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        TechCrunch
+      </span>
+      <span class="press-logo">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" opacity="0.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3" stroke="white" stroke-width="2" fill="none"/></svg>
+        Forbes
+      </span>
+      <span class="press-logo">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" opacity="0.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        Skift
+      </span>
+      <span class="press-logo">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" opacity="0.5"><path d="M4 4h16v16H4z" rx="2"/><path d="M9 9h6M9 12h6M9 15h4" stroke="white" stroke-width="1.5" fill="none"/></svg>
+        Phocuswire
+      </span>
+      <span class="press-logo">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" opacity="0.5"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm1 14.93V17a1 1 0 0 1-2 0v-.07A8.001 8.001 0 0 1 4.07 11H5a1 1 0 0 1 0 2 6 6 0 0 0 5 5.93zM12 6a1 1 0 1 1 0 2 6 6 0 0 0-5.93 5H5a1 1 0 0 1 0-2A8.001 8.001 0 0 1 12 4z"/></svg>
+        Hospitality Tech
+      </span>
+      <span class="press-logo">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" opacity="0.5"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-7 3a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 14a9 9 0 0 1-7-3.33C7.11 15 9.37 14 12 14s4.89 1 7 2.67A9 9 0 0 1 12 20z"/></svg>
+        Short Term Rentalz
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TESTIMONIALS SECTION
+============================================================ -->
+<section id="testimonials" class="section-padding bg-sand">
+  <div class="container">
+    <div class="section-header text-center mb-5" data-aos="fade-up">
+      <span class="section-tag">What Our Customers Say</span>
+      <h2 class="section-title">Trusted by Property Managers Worldwide</h2>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="testimonial-card">
+          <div class="stars mb-3">
+            <i data-lucide="star" class="star-icon"></i><i data-lucide="star" class="star-icon"></i><i data-lucide="star" class="star-icon"></i><i data-lucide="star" class="star-icon"></i><i data-lucide="star" class="star-icon"></i>
+          </div>
+          <p class="testimonial-text">"Before this system, we managed everything through WhatsApp, spreadsheets, and manual reminders. Now our bookings, guests, cleaning, and reporting are organized in one place. It's transformed how we operate."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">MR</div>
+            <div>
+              <div class="author-name">Maria Rodriguez</div>
+              <div class="author-role">10-Unit Villa Manager, Aruba</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="testimonial-card">
+          <div class="stars mb-3">
+            <i data-lucide="star" class="star-icon"></i><i data-lucide="star" class="star-icon"></i><i data-lucide="star" class="star-icon"></i><i data-lucide="star" class="star-icon"></i><i data-lucide="star" class="star-icon"></i>
+          </div>
+          <p class="testimonial-text">"The automated messaging alone saved us 3 hours a day. Guests get timely, professional communication and our reviews went from 4.3 to 4.8 stars in just two months."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">JT</div>
+            <div>
+              <div class="author-name">James Thompson</div>
+              <div class="author-role">Airbnb Superhost, 6 Properties</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="testimonial-card">
+          <div class="stars mb-3">
+            <i data-lucide="star" class="star-icon"></i><i data-lucide="star" class="star-icon"></i><i data-lucide="star" class="star-icon"></i><i data-lucide="star" class="star-icon"></i><i data-lucide="star" class="star-icon"></i>
+          </div>
+          <p class="testimonial-text">"Our property owners love the monthly reports. It shows professionalism and builds trust. The upsell feature added over $1,200 in extra revenue last month alone."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">SC</div>
+            <div>
+              <div class="author-name">Sofia Chen</div>
+              <div class="author-role">Property Management Company, 28 Units</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="testimonial-card">
+          <div class="stars mb-3">
+            <i data-lucide="star" class="star-icon"></i><i data-lucide="star" class="star-icon"></i><i data-lucide="star" class="star-icon"></i><i data-lucide="star" class="star-icon"></i><i data-lucide="star" class="star-icon"></i>
+          </div>
+          <p class="testimonial-text">"Setting up was surprisingly easy. The onboarding team helped us migrate everything. Within a week, our whole team was using it without any issues."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">AK</div>
+            <div>
+              <div class="author-name">Ahmed Khalil</div>
+              <div class="author-role">Boutique Hotel Owner, 18 Rooms</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="testimonial-card">
+          <div class="stars mb-3">
+            <i data-lucide="star" class="star-icon"></i><i data-lucide="star" class="star-icon"></i><i data-lucide="star" class="star-icon"></i><i data-lucide="star" class="star-icon"></i><i data-lucide="star" class="star-icon"></i>
+          </div>
+          <p class="testimonial-text">"The cleaning schedule feature is a game changer. My cleaning team knows exactly what to do and when, and I get notified the moment a property is ready. Zero mix-ups."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">LP</div>
+            <div>
+              <div class="author-name">Laura Perez</div>
+              <div class="author-role">STR Operator, Caribbean, 15 Units</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="testimonial-card">
+          <div class="stars mb-3">
+            <i data-lucide="star" class="star-icon"></i><i data-lucide="star" class="star-icon"></i><i data-lucide="star" class="star-icon"></i><i data-lucide="star" class="star-icon"></i><i data-lucide="star" class="star-icon"></i>
+          </div>
+          <p class="testimonial-text">"We scaled from 4 to 22 properties in one year. StayMaster Pro scaled right alongside us. We couldn't have done it without the system. Worth every cent."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">DM</div>
+            <div>
+              <div class="author-name">David Martinez</div>
+              <div class="author-role">Vacation Rental Company, 22 Properties</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CUSTOMER LOGO WALL
+============================================================ -->
+<section class="logo-wall-section section-padding">
+  <div class="container">
+    <div class="section-header text-center mb-5" data-aos="fade-up">
+      <span class="section-tag">Trusted by Growing Businesses</span>
+      <h2 class="section-title">Property Managers Who Trust StayMaster Pro</h2>
+    </div>
+    <div class="logo-wall-grid" data-aos="fade-up" data-aos-delay="100">
+      <div class="logo-wall-item">
+        <i data-lucide="building-2" class="lw-icon"></i>
+        <span>Azure Villa Group</span>
+      </div>
+      <div class="logo-wall-item">
+        <i data-lucide="home" class="lw-icon"></i>
+        <span>Caribbean Stays</span>
+      </div>
+      <div class="logo-wall-item">
+        <i data-lucide="map-pin" class="lw-icon"></i>
+        <span>SunRent Aruba</span>
+      </div>
+      <div class="logo-wall-item">
+        <i data-lucide="key-round" class="lw-icon"></i>
+        <span>Elite Keys</span>
+      </div>
+      <div class="logo-wall-item">
+        <i data-lucide="hotel" class="lw-icon"></i>
+        <span>Boutique Bed Co.</span>
+      </div>
+      <div class="logo-wall-item">
+        <i data-lucide="umbrella" class="lw-icon"></i>
+        <span>CoastalHost Pro</span>
+      </div>
+      <div class="logo-wall-item">
+        <i data-lucide="star" class="lw-icon"></i>
+        <span>5Star Rentals</span>
+      </div>
+      <div class="logo-wall-item">
+        <i data-lucide="palmtree" class="lw-icon"></i>
+        <span>Island Escapes</span>
+      </div>
+      <div class="logo-wall-item">
+        <i data-lucide="trending-up" class="lw-icon"></i>
+        <span>ScaleStay</span>
+      </div>
+      <div class="logo-wall-item">
+        <i data-lucide="shield" class="lw-icon"></i>
+        <span>TrustHost</span>
+      </div>
+    </div>
+    <!-- Animated ticker row -->
+    <div class="logo-ticker-wrap mt-4" data-aos="fade-up" data-aos-delay="200">
+      <div class="logo-ticker">
+        <span class="lt-item">🏡 Villa Rosa · Aruba</span>
+        <span class="lt-item">🌴 Palma Retreats · Spain</span>
+        <span class="lt-item">🏖️ Azure Suites · Greece</span>
+        <span class="lt-item">🏔️ Alpine Lodge · Austria</span>
+        <span class="lt-item">🏝️ Lagoon Villas · Maldives</span>
+        <span class="lt-item">🌅 Sunset Keys · Florida</span>
+        <span class="lt-item">🏙️ Urban Stays · NYC</span>
+        <span class="lt-item">🌊 Wave House · Bali</span>
+        <span class="lt-item">🌿 Green Garden · Costa Rica</span>
+        <span class="lt-item">🏡 Villa Rosa · Aruba</span>
+        <span class="lt-item">🌴 Palma Retreats · Spain</span>
+        <span class="lt-item">🏖️ Azure Suites · Greece</span>
+        <span class="lt-item">🏔️ Alpine Lodge · Austria</span>
+        <span class="lt-item">🏝️ Lagoon Villas · Maldives</span>
+        <span class="lt-item">🌅 Sunset Keys · Florida</span>
+        <span class="lt-item">🌊 Wave House · Bali</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FAQ SECTION
+============================================================ -->
+<section id="faq" class="section-padding bg-white">
+  <div class="container">
+    <div class="section-header text-center mb-5" data-aos="fade-up">
+      <span class="section-tag">Frequently Asked Questions</span>
+      <h2 class="section-title">Everything You Need to Know</h2>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-lg-8" data-aos="fade-up" data-aos-delay="100">
+        <div class="accordion faq-accordion" id="faqAccordion">
+
+          <div class="accordion-item faq-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                Is StayMaster Pro only for Airbnb hosts?
+              </button>
+            </h2>
+            <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">No! StayMaster Pro works for any vacation rental operator — Airbnb hosts, VRBO hosts, direct booking managers, boutique hotels, villa operators, apartment complexes, and anyone managing short-term rentals. The platform is platform-agnostic and works alongside any booking channel.</div>
+            </div>
+          </div>
+
+          <div class="accordion-item faq-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                Can I manage multiple properties?
+              </button>
+            </h2>
+            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">Absolutely. StayMaster Pro is built for multi-property management. The Starter plan supports up to 2 units, Growth supports up to 10, Professional up to 30, and Enterprise supports unlimited properties with custom configuration.</div>
+            </div>
+          </div>
+
+          <div class="accordion-item faq-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                Can my staff use the system?
+              </button>
+            </h2>
+            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">Yes! The Growth plan and above include staff accounts with role-based access control. You can set specific permissions for managers, cleaners, maintenance staff, and other roles — ensuring each person sees only what's relevant to their job.</div>
+            </div>
+          </div>
+
+          <div class="accordion-item faq-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                Can property owners receive reports?
+              </button>
+            </h2>
+            <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">Yes! The Growth plan and above include owner reporting. You can generate professional monthly statements showing occupancy, revenue, expenses, and key performance metrics. The optional Owner Portal add-on gives owners their own login to view their property data in real time.</div>
+            </div>
+          </div>
+
+          <div class="accordion-item faq-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                Is setup included in the subscription?
+              </button>
+            </h2>
+            <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">Basic setup assistance is included with all plans. For larger operations, we offer professional onboarding packages ranging from $350 to $1,500 depending on your size. Enterprise clients receive dedicated migration and onboarding support.</div>
+            </div>
+          </div>
+
+          <div class="accordion-item faq-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+                Can this integrate with my existing website?
+              </button>
+            </h2>
+            <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">Yes! The optional Website Booking Page add-on ($49/month) adds a direct booking page that you can embed on or link from your existing website. This lets guests book directly, saving you platform commission fees.</div>
+            </div>
+          </div>
+
+          <div class="accordion-item faq-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq7">
+                Can I customize the message templates?
+              </button>
+            </h2>
+            <div id="faq7" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">Absolutely. All communication templates are fully customizable. You can create templates for pre-arrival, check-in, during-stay, post-stay, review requests, and more. Professional plan users also get WhatsApp and email workflow automation support.</div>
+            </div>
+          </div>
+
+          <div class="accordion-item faq-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq8">
+                What kind of support do you offer?
+              </button>
+            </h2>
+            <div id="faq8" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">All plans include email support. Growth and Professional plans include priority support. Enterprise customers receive a dedicated support representative. We also have a 24/7 AI Assistant, knowledge base, and video tutorials available to all users.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CONTACT SECTION
+============================================================ -->
+<section id="contact" class="section-padding bg-sand">
+  <div class="container">
+    <div class="section-header text-center mb-5" data-aos="fade-up">
+      <span class="section-tag">Get In Touch</span>
+      <h2 class="section-title">Ready to Simplify Your Property Management?</h2>
+      <p class="section-subtitle">Contact our team today. We'll help you choose the right plan and get started.</p>
+    </div>
+
+    <div class="row g-5">
+      <!-- Contact Form -->
+      <div class="col-lg-7" data-aos="fade-right" data-aos-duration="800">
+        <div class="contact-form-card">
+          <h5 class="fw-bold mb-4">Request Information</h5>
+          <form id="contactForm" novalidate>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Full Name *</label>
+                <input type="text" name="full_name" class="form-control" placeholder="Your full name" required autocomplete="name" />
+                <span class="field-error">Please enter your name</span>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Company Name</label>
+                <input type="text" name="company" class="form-control" placeholder="Your company" autocomplete="organization" />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Email Address *</label>
+                <input type="email" name="email" class="form-control" placeholder="you@example.com" required autocomplete="email" />
+                <span class="field-error">Please enter a valid email</span>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Phone Number</label>
+                <input type="tel" name="phone" class="form-control" placeholder="+1 (000) 000-0000" autocomplete="tel" />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Number of Properties</label>
+                <select name="properties" class="form-select">
+                  <option value="">Select range</option>
+                  <option value="1-2">1–2 properties</option>
+                  <option value="3-10">3–10 properties</option>
+                  <option value="11-30">11–30 properties</option>
+                  <option value="30+">30+ properties</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Interested Plan</label>
+                <select name="plan" class="form-select">
+                  <option value="">Select a plan</option>
+                  <option value="starter">Starter – $49/mo</option>
+                  <option value="growth">Growth – $149/mo</option>
+                  <option value="professional">Professional – $299/mo</option>
+                  <option value="enterprise">Enterprise – Custom</option>
+                  <option value="unsure">Not sure yet</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Message</label>
+                <textarea name="message" class="form-control" rows="4" placeholder="Tell us about your property management needs..."></textarea>
+              </div>
+              <div class="col-12">
+                <button type="submit" class="btn btn-primary btn-lg w-100">
+                  <i data-lucide="send" class="btn-icon me-2"></i>Request Information
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Contact Info Cards -->
+      <div class="col-lg-5" data-aos="fade-left" data-aos-duration="800" data-aos-delay="100">
+        <div class="row g-3">
+          <div class="col-12">
+            <div class="contact-info-card">
+              <div class="contact-info-icon"><i data-lucide="mail" class="ci-icon"></i></div>
+              <div>
+                <div class="ci-label">Sales</div>
+                <a href="#" id="sales-email-link" class="ci-value">sales@yourcompany.com</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="contact-info-card">
+              <div class="contact-info-icon"><i data-lucide="headphones" class="ci-icon"></i></div>
+              <div>
+                <div class="ci-label">Support</div>
+                <a href="mailto:support@yourcompany.com" class="ci-value">support@yourcompany.com</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="contact-info-card">
+              <div class="contact-info-icon"><i data-lucide="phone" class="ci-icon"></i></div>
+              <div>
+                <div class="ci-label">Phone</div>
+                <a href="tel:+297XXXXXXX" class="ci-value">+297 XXX XXXX</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="contact-info-card">
+              <div class="contact-info-icon"><i data-lucide="message-circle" class="ci-icon"></i></div>
+              <div>
+                <div class="ci-label">Live Chat</div>
+                <span class="ci-value">Available 24/7</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CTA Box -->
+        <div class="contact-cta-box mt-4">
+          <h5 class="fw-bold text-white mb-2">Book your free demo today.</h5>
+          <p class="text-white-50 small mb-3">See the full platform in action with one of our product experts.</p>
+          <a href="#" id="contact-demo-btn" class="btn btn-accent w-100">
+            <i data-lucide="calendar-days" class="btn-icon me-2"></i>Schedule Free Demo
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     BLOG / RESOURCES STRIP
+============================================================ -->
+<section class="section-padding bg-white">
+  <div class="container">
+    <div class="section-header text-center mb-5" data-aos="fade-up">
+      <span class="section-tag">Resources &amp; Guides</span>
+      <h2 class="section-title">From the StayMaster Blog</h2>
+      <p class="section-subtitle">Practical tips to help you manage better, earn more, and delight your guests.</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="0">
+        <a href="#" class="blog-card">
+          <div class="blog-card-img blog-img-1">
+            <span class="blog-tag">Operations</span>
+          </div>
+          <div class="blog-card-body">
+            <div class="blog-meta">
+              <i data-lucide="calendar" style="width:12px;height:12px;"></i> June 10, 2026 · 5 min read
+            </div>
+            <h5 class="blog-title">How to Cut Property Admin Time by 40% This Month</h5>
+            <p class="blog-excerpt">The exact automation workflows our top operators use to reclaim 10+ hours every week.</p>
+            <span class="blog-read-more">Read article <i data-lucide="arrow-right" style="width:13px;height:13px;"></i></span>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+        <a href="#" class="blog-card">
+          <div class="blog-card-img blog-img-2">
+            <span class="blog-tag">Revenue</span>
+          </div>
+          <div class="blog-card-body">
+            <div class="blog-meta">
+              <i data-lucide="calendar" style="width:12px;height:12px;"></i> May 28, 2026 · 7 min read
+            </div>
+            <h5 class="blog-title">The Ultimate Upsell Playbook for Vacation Rental Hosts</h5>
+            <p class="blog-excerpt">From airport transfers to romantic setups — here's how to add $500+ per booking without annoying your guests.</p>
+            <span class="blog-read-more">Read article <i data-lucide="arrow-right" style="width:13px;height:13px;"></i></span>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+        <a href="#" class="blog-card">
+          <div class="blog-card-img blog-img-3">
+            <span class="blog-tag">Guest Experience</span>
+          </div>
+          <div class="blog-card-body">
+            <div class="blog-meta">
+              <i data-lucide="calendar" style="width:12px;height:12px;"></i> May 15, 2026 · 4 min read
+            </div>
+            <h5 class="blog-title">5 Automated Messages That Turn One-Time Guests into Repeat Bookers</h5>
+            <p class="blog-excerpt">The message sequences that consistently produce 5-star reviews and direct rebookings.</p>
+            <span class="blog-read-more">Read article <i data-lucide="arrow-right" style="width:13px;height:13px;"></i></span>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="text-center mt-5" data-aos="fade-up">
+      <a href="#" class="btn btn-outline-primary px-4">View All Articles</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     STICKY CTA BAR
+============================================================ -->
+<div id="sticky-cta" class="sticky-cta-bar">
+  <div class="container d-flex align-items-center justify-content-between gap-3 flex-wrap">
+    <div class="sticky-cta-text">
+      <strong>Ready to simplify your property management?</strong>
+      <span class="d-none d-md-inline text-white-50"> — 14-day free trial, no credit card.</span>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="#" id="sticky-trial-btn" class="btn btn-accent btn-sm px-4">Start Free Trial</a>
+      <a href="#" id="sticky-demo-btn" class="btn btn-outline-light btn-sm px-3">Book Demo</a>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+<footer class="footer-section">
+  <div class="container">
+    <div class="row g-5 py-5">
+
+      <!-- Brand -->
+      <div class="col-lg-4">
+        <a class="d-flex align-items-center gap-2 mb-3 text-decoration-none" href="#home">
+          <div class="brand-logo-icon small"><i data-lucide="home" style="width:16px;height:16px;"></i></div>
+          <span class="brand-name text-white">StayMaster <span class="brand-accent">Pro</span></span>
+        </a>
+        <p class="text-footer-muted mb-4">All-in-one vacation rental property management software. Manage smarter, scale faster, earn more.</p>
+
+        <!-- Footer Lead Form -->
+        <h6 class="text-white fw-semibold mb-2">Stay Updated</h6>
+        <form class="d-flex gap-2" id="footerLeadForm" novalidate>
+          <input type="email" name="email" class="form-control form-control-sm footer-input" placeholder="Your email" required autocomplete="email" />
+          <button type="submit" class="btn btn-accent btn-sm px-3">Go</button>
+        </form>
+
+        <!-- Footer CTA Buttons -->
+        <div class="d-flex gap-2 mt-3 flex-wrap">
+          <a href="#" id="footer-trial-btn" class="btn btn-accent btn-sm px-3">Start Free Trial</a>
+          <a href="#" id="footer-demo-btn" class="btn btn-outline-light btn-sm px-3">Book Demo</a>
+          <a href="#" id="footer-ai-btn" class="btn btn-glass-sm btn-sm px-3">AI Assistant</a>
+        </div>
+      </div>
+
+      <!-- Product -->
+      <div class="col-6 col-lg-2">
+        <h6 class="footer-heading">Product</h6>
+        <ul class="footer-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#demo">Demo</a></li>
+          <li><a href="#">Integrations</a></li>
+          <li><a href="#">Updates</a></li>
+        </ul>
+      </div>
+
+      <!-- Resources -->
+      <div class="col-6 col-lg-2">
+        <h6 class="footer-heading">Resources</h6>
+        <ul class="footer-links">
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">API Docs</a></li>
+          <li><a href="#">Status</a></li>
+        </ul>
+      </div>
+
+      <!-- Company -->
+      <div class="col-6 col-lg-2">
+        <h6 class="footer-heading">Company</h6>
+        <ul class="footer-links">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Partners</a></li>
+        </ul>
+      </div>
+
+      <!-- Legal -->
+      <div class="col-6 col-lg-2">
+        <h6 class="footer-heading">Legal</h6>
+        <ul class="footer-links">
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Cookie Policy</a></li>
+          <li><a href="#">GDPR</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <hr class="footer-divider" />
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center py-3 gap-3">
+      <div class="text-footer-muted small">© 2026 StayMaster Pro. All rights reserved.</div>
+      <div class="d-flex gap-3">
+        <a href="#" class="footer-social"><i data-lucide="twitter" style="width:16px;height:16px;"></i></a>
+        <a href="#" class="footer-social"><i data-lucide="linkedin" style="width:16px;height:16px;"></i></a>
+        <a href="#" class="footer-social"><i data-lucide="instagram" style="width:16px;height:16px;"></i></a>
+        <a href="#" class="footer-social"><i data-lucide="facebook" style="width:16px;height:16px;"></i></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================================
+     DEMO MODAL
+============================================================ -->
+<div class="modal fade" id="demoModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content modal-custom">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold">Book Your Free Demo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted mb-4">Fill in your details and our team will contact you to schedule a personalized 30-minute demo session.</p>
+        <form id="demoModalForm" novalidate>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Full Name *</label>
+              <input type="text" name="full_name" class="form-control" required autocomplete="name" />
+              <span class="field-error">Please enter your name</span>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Email Address *</label>
+              <input type="email" name="email" class="form-control" required autocomplete="email" />
+              <span class="field-error">Please enter a valid email</span>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Phone Number</label>
+              <input type="tel" name="phone" class="form-control" autocomplete="tel" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Number of Properties</label>
+              <select name="properties" class="form-select">
+                <option value="">Select range</option>
+                <option value="1-2">1–2</option>
+                <option value="3-10">3–10</option>
+                <option value="11-30">11–30</option>
+                <option value="30+">30+</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary w-100">
+                <i data-lucide="calendar-days" class="btn-icon me-2"></i>Schedule My Demo
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SUCCESS TOAST
+============================================================ -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:9999;">
+  <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert">
+    <div class="d-flex">
+      <div class="toast-body">
+        <i data-lucide="check-circle" style="width:16px;height:16px;" class="me-2"></i>
+        <span id="toastMessage">Thank you! We'll be in touch shortly.</span>
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Lucide Icons CDN -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+<!-- AOS — Animate On Scroll -->
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+<!-- Custom JS -->
+<script src="script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login — StayMaster Pro</title>
+  <!-- Prevent search engine indexing of this page -->
+  <meta name="robots" content="noindex, nofollow" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --color-primary:   #0B1F3A;
+      --color-secondary: #00A6A6;
+      --color-accent:    #F4C95D;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0B1F3A 0%, #0a2a4a 50%, #063535 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .login-card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 48px 44px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.4);
+    }
+    .brand-logo {
+      width: 48px; height: 48px;
+      background: linear-gradient(135deg, var(--color-secondary), #006e6e);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .form-control {
+      border-radius: 10px;
+      border: 1.5px solid #e5e7eb;
+      padding: 11px 14px;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+    .form-control:focus {
+      border-color: var(--color-secondary);
+      box-shadow: 0 0 0 3px rgba(0,166,166,0.1);
+    }
+    .btn-primary {
+      background: var(--color-secondary);
+      border-color: var(--color-secondary);
+      border-radius: 10px;
+      font-weight: 600;
+      padding: 12px;
+      font-size: 15px;
+      transition: all 0.2s;
+    }
+    .btn-primary:hover { background: #008f8f; border-color: #008f8f; }
+    .form-label { font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 5px; }
+    .input-group-text {
+      border-radius: 10px 0 0 10px !important;
+      border: 1.5px solid #e5e7eb;
+      background: #f9fafb;
+      color: #9ca3af;
+    }
+    .input-group .form-control { border-radius: 0 10px 10px 0 !important; }
+    .toggle-pw {
+      cursor: pointer; background: #f9fafb;
+      border: 1.5px solid #e5e7eb; border-left: none;
+      border-radius: 0 10px 10px 0 !important;
+      color: #9ca3af; padding: 0 12px;
+    }
+    .divider { display: flex; align-items: center; gap: 12px; color: #d1d5db; font-size: 13px; }
+    .divider::before, .divider::after { content: ''; flex: 1; border-top: 1px solid #e5e7eb; }
+    .security-badge {
+      display: flex; align-items: center; gap: 8px;
+      background: #f0fdf4; border: 1px solid #bbf7d0;
+      border-radius: 8px; padding: 10px 14px;
+      font-size: 13px; color: #166534;
+    }
+    .attempt-warning {
+      display: none;
+      background: #fef3c7; border: 1px solid #fcd34d;
+      border-radius: 8px; padding: 10px 14px;
+      font-size: 13px; color: #92400e;
+    }
+    .twofa-section { display: none; }
+    #lockoutMsg { display: none; }
+  </style>
+</head>
+<body>
+
+<div class="login-card">
+
+  <!-- Logo -->
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <div class="brand-logo">
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
+    <div>
+      <div style="font-size:18px;font-weight:800;color:#0B1F3A;">StayMaster <span style="color:#00A6A6;">Pro</span></div>
+      <div style="font-size:12px;color:#6B7280;">Administration Portal</div>
+    </div>
+  </div>
+
+  <h5 class="fw-bold mb-1" style="color:#111827;">Secure Admin Login</h5>
+  <p class="text-muted mb-4" style="font-size:14px;">Access restricted to authorized administrators only.</p>
+
+  <!-- Lockout Message -->
+  <div id="lockoutMsg" class="alert alert-danger py-2 mb-3" style="font-size:13px;">
+    ⚠️ Account locked after multiple failed attempts. Please wait 15 minutes or contact support.
+  </div>
+
+  <!-- Attempt Warning -->
+  <div class="attempt-warning mb-3" id="attemptWarning">
+    ⚠️ <span id="attemptText">Invalid credentials. 2 attempts remaining before lockout.</span>
+  </div>
+
+  <!-- Login Form -->
+  <form id="loginForm" novalidate>
+
+    <!-- Username -->
+    <div class="mb-3">
+      <label class="form-label">Username or Email</label>
+      <div class="input-group">
+        <span class="input-group-text">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </span>
+        <input type="text" class="form-control" id="username" placeholder="admin@yourcompany.com" required autocomplete="username" />
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div class="mb-3">
+      <label class="form-label">Password</label>
+      <div class="input-group">
+        <span class="input-group-text">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </span>
+        <input type="password" class="form-control" id="password" placeholder="••••••••" required autocomplete="current-password" />
+        <button type="button" class="toggle-pw" id="togglePw" title="Show/hide password">
+          <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- 2FA Section (shown after first factor) -->
+    <div class="twofa-section mb-3" id="twofaSection">
+      <label class="form-label">Two-Factor Authentication Code</label>
+      <input type="text" class="form-control text-center" id="twofaCode" placeholder="000000" maxlength="6" inputmode="numeric" pattern="[0-9]{6}" />
+      <div class="form-text text-muted">Enter the 6-digit code from your authenticator app.</div>
+    </div>
+
+    <!-- Remember Me + Forgot -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="rememberMe" />
+        <label class="form-check-label" for="rememberMe" style="font-size:13px;">Remember this device</label>
+      </div>
+      <a href="#" style="font-size:13px;color:#00A6A6;" onclick="showForgotPassword()">Forgot password?</a>
+    </div>
+
+    <!-- Submit -->
+    <button type="submit" class="btn btn-primary w-100" id="loginBtn">
+      <span id="loginBtnText">Sign In Securely</span>
+      <span id="loginBtnSpinner" class="d-none spinner-border spinner-border-sm ms-2" role="status"></span>
+    </button>
+
+  </form>
+
+  <div class="divider my-4">secured connection</div>
+
+  <!-- Security Badge -->
+  <div class="security-badge">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    <span>256-bit SSL · CSRF Protected · Login Activity Logged</span>
+  </div>
+
+  <div class="text-center mt-3">
+    <a href="/" style="font-size:13px;color:#9ca3af;">← Back to website</a>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const MAX_ATTEMPTS = 3;
+  let attempts = 0;
+  let locked = false;
+
+  // Toggle password visibility
+  document.getElementById("togglePw").addEventListener("click", () => {
+    const pw = document.getElementById("password");
+    pw.type = pw.type === "password" ? "text" : "password";
+  });
+
+  // Form submit
+  document.getElementById("loginForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    if (locked) return;
+
+    const btn     = document.getElementById("loginBtn");
+    const spinner = document.getElementById("loginBtnSpinner");
+    const btnText = document.getElementById("loginBtnText");
+
+    btn.disabled = true;
+    spinner.classList.remove("d-none");
+    btnText.textContent = "Signing in…";
+
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: document.getElementById("username").value.trim(),
+          password: document.getElementById("password").value,
+          twofaCode: document.getElementById("twofaCode").value || undefined,
+          remember: document.getElementById("rememberMe").checked,
+        })
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        if (data.requires2FA) {
+          // Show 2FA input
+          document.getElementById("twofaSection").style.display = "block";
+          btnText.textContent = "Verify Code";
+          btn.disabled = false;
+          spinner.classList.add("d-none");
+        } else {
+          // Redirect to dashboard
+          window.location.href = "/secure-admin/dashboard";
+        }
+      } else {
+        handleFailedAttempt(data.message || "Invalid credentials.");
+      }
+    } catch {
+      // Dev fallback: demo redirect without a live server
+      console.warn("No server — using demo redirect.");
+      window.location.href = "dashboard.html";
+    } finally {
+      if (!locked) {
+        btn.disabled = false;
+        spinner.classList.add("d-none");
+        btnText.textContent = "Sign In Securely";
+      }
+    }
+  });
+
+  function handleFailedAttempt(msg) {
+    attempts++;
+    const remaining = MAX_ATTEMPTS - attempts;
+    const warning   = document.getElementById("attemptWarning");
+    const warnText  = document.getElementById("attemptText");
+
+    if (attempts >= MAX_ATTEMPTS) {
+      locked = true;
+      document.getElementById("lockoutMsg").style.display = "block";
+      document.getElementById("loginBtn").disabled = true;
+      document.getElementById("loginBtn").textContent = "Account Locked";
+      warning.style.display = "none";
+    } else {
+      warning.style.display = "flex";
+      warnText.textContent = `${msg} ${remaining} attempt${remaining !== 1 ? "s" : ""} remaining before lockout.`;
+    }
+  }
+
+  function showForgotPassword() {
+    alert("Password reset instructions will be sent to your registered admin email address.");
+  }
+</script>
+</body>
+</html>

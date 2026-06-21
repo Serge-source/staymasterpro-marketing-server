@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard — StayMaster Pro</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --color-primary:   #0B1F3A;
+      --color-secondary: #00A6A6;
+      --color-accent:    #F4C95D;
+      --color-sand:      #F5EFE6;
+      --sidebar-w:       260px;
+      --topbar-h:        64px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family:'Inter',sans-serif; background:#f1f5f9; color:#111827; margin:0; }
+
+    /* ---- Sidebar ---- */
+    .sidebar {
+      position: fixed; top:0; left:0; bottom:0;
+      width: var(--sidebar-w);
+      background: var(--color-primary);
+      display: flex; flex-direction: column;
+      z-index: 1000; overflow-y: auto;
+      transition: transform .3s ease;
+    }
+    .sidebar-logo {
+      display:flex; align-items:center; gap:10px;
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .logo-icon {
+      width:36px; height:36px;
+      background: linear-gradient(135deg, var(--color-secondary), #006e6e);
+      border-radius:10px; display:flex; align-items:center; justify-content:center;
+    }
+    .logo-text { font-size:15px; font-weight:800; color:#fff; letter-spacing:-.02em; }
+    .logo-sub  { font-size:11px; color:rgba(255,255,255,0.45); }
+
+    .sidebar-section { padding: 16px 12px 6px; font-size:10px; font-weight:700; color:rgba(255,255,255,0.35); text-transform:uppercase; letter-spacing:.08em; }
+
+    .nav-item { list-style:none; margin:1px 0; }
+    .nav-link-admin {
+      display:flex; align-items:center; gap:10px;
+      padding: 9px 12px;
+      color: rgba(255,255,255,0.6);
+      text-decoration:none; font-size:14px; font-weight:500;
+      border-radius:10px; transition: all .2s;
+    }
+    .nav-link-admin:hover  { background: rgba(255,255,255,0.08); color:#fff; }
+    .nav-link-admin.active { background: var(--color-secondary); color:#fff; }
+    .nav-link-admin svg    { width:16px; height:16px; flex-shrink:0; }
+
+    .nav-badge {
+      margin-left:auto; background:var(--color-accent); color:var(--color-primary);
+      font-size:11px; font-weight:700; padding:1px 7px; border-radius:10px;
+    }
+
+    .sidebar-footer {
+      margin-top:auto; padding:16px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .admin-user {
+      display:flex; align-items:center; gap:10px;
+    }
+    .admin-avatar {
+      width:34px; height:34px; border-radius:50%;
+      background: linear-gradient(135deg, var(--color-accent), #e8a800);
+      display:flex; align-items:center; justify-content:center;
+      font-weight:800; font-size:13px; color:var(--color-primary);
+    }
+    .admin-name  { font-size:13px; font-weight:600; color:#fff; }
+    .admin-role  { font-size:11px; color:rgba(255,255,255,0.45); }
+
+    /* ---- Topbar ---- */
+    .topbar {
+      position:fixed; top:0; left:var(--sidebar-w); right:0;
+      height: var(--topbar-h);
+      background:#fff; border-bottom:1px solid #e5e7eb;
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 0 24px; z-index:900;
+      box-shadow: 0 1px 10px rgba(0,0,0,0.06);
+    }
+    .topbar-title { font-size:18px; font-weight:700; color:var(--color-primary); }
+    .topbar-actions { display:flex; align-items:center; gap:12px; }
+    .icon-btn {
+      width:36px; height:36px; border-radius:10px;
+      background:#f3f4f6; border:none; display:flex; align-items:center; justify-content:center;
+      cursor:pointer; transition:all .2s; position:relative;
+    }
+    .icon-btn:hover { background:#e5e7eb; }
+    .icon-btn svg { width:17px; height:17px; color:#6b7280; }
+    .notif-dot {
+      width:8px; height:8px; background:#ef4444;
+      border-radius:50%; position:absolute; top:6px; right:6px;
+      border:2px solid #fff;
+    }
+    .mobile-toggle { display:none; }
+
+    /* ---- Main Content ---- */
+    .main-content {
+      margin-left: var(--sidebar-w);
+      margin-top: var(--topbar-h);
+      padding: 28px;
+      min-height: calc(100vh - var(--topbar-h));
+    }
+
+    /* ---- Stat Cards ---- */
+    .stat-card {
+      background:#fff; border-radius:16px; padding:22px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      border: 1px solid #f0f0f0; transition: all .2s;
+    }
+    .stat-card:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,0.09); }
+    .stat-card-icon {
+      width:44px; height:44px; border-radius:12px;
+      display:flex; align-items:center; justify-content:center; margin-bottom:14px;
+    }
+    .stat-card-icon svg { width:20px; height:20px; }
+    .icon-teal   { background:rgba(0,166,166,0.12); color:var(--color-secondary); }
+    .icon-blue   { background:rgba(59,130,246,0.12); color:#3b82f6; }
+    .icon-amber  { background:rgba(244,201,93,0.2);  color:#d97706; }
+    .icon-green  { background:rgba(16,185,129,0.12); color:#10b981; }
+    .icon-purple { background:rgba(139,92,246,0.12); color:#8b5cf6; }
+    .icon-red    { background:rgba(239,68,68,0.12);  color:#ef4444; }
+    .stat-num  { font-size:1.9rem; font-weight:800; color:var(--color-primary); line-height:1; }
+    .stat-lbl  { font-size:13px; color:#6b7280; margin-top:4px; }
+    .stat-chg  { font-size:12px; font-weight:600; margin-top:6px; }
+    .chg-up    { color:#10b981; }
+    .chg-down  { color:#ef4444; }
+
+    /* ---- Section Cards ---- */
+    .card-section {
+      background:#fff; border-radius:16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      border:1px solid #f0f0f0; overflow:hidden;
+    }
+    .card-section-header {
+      padding: 18px 22px;
+      border-bottom: 1px solid #f0f0f0;
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .card-section-title { font-size:15px; font-weight:700; color:var(--color-primary); }
+    .card-section-body  { padding:22px; }
+
+    /* ---- Tables ---- */
+    .admin-table { width:100%; border-collapse:collapse; }
+    .admin-table th {
+      text-align:left; font-size:11px; font-weight:700;
+      color:#9ca3af; text-transform:uppercase; letter-spacing:.06em;
+      padding:10px 12px; border-bottom:1px solid #f0f0f0; background:#fafafa;
+    }
+    .admin-table td { padding:12px; font-size:13.5px; border-bottom:1px solid #f9f9f9; vertical-align:middle; }
+    .admin-table tr:last-child td { border-bottom:none; }
+    .admin-table tr:hover td { background:#fafafa; }
+
+    /* ---- Badges ---- */
+    .badge-status {
+      display:inline-block; font-size:11px; font-weight:600;
+      padding: 3px 10px; border-radius:20px;
+    }
+    .badge-active   { background:#ecfdf5; color:#065f46; }
+    .badge-trial    { background:#fffbeb; color:#92400e; }
+    .badge-expired  { background:#fef2f2; color:#991b1b; }
+    .badge-pending  { background:#eff6ff; color:#1e40af; }
+    .badge-paid     { background:#ecfdf5; color:#065f46; }
+    .badge-unpaid   { background:#fef2f2; color:#991b1b; }
+    .badge-new      { background:rgba(0,166,166,0.1); color:var(--color-secondary); }
+    .badge-open     { background:#fffbeb; color:#92400e; }
+    .badge-resolved { background:#ecfdf5; color:#065f46; }
+
+    /* ---- Tabs ---- */
+    .admin-tabs { display:flex; gap:4px; border-bottom:2px solid #f0f0f0; margin-bottom:20px; }
+    .admin-tab {
+      padding:8px 16px; font-size:13px; font-weight:600; color:#6b7280;
+      cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px;
+      transition:all .2s; border-radius:6px 6px 0 0;
+    }
+    .admin-tab:hover  { color:var(--color-secondary); }
+    .admin-tab.active { color:var(--color-secondary); border-bottom-color:var(--color-secondary); background:rgba(0,166,166,0.04); }
+
+    /* ---- Panel switching ---- */
+    .admin-panel { display:none; }
+    .admin-panel.active { display:block; }
+
+    /* ---- Forms in CMS panels ---- */
+    .cms-form label { font-size:13px; font-weight:600; color:#374151; margin-bottom:4px; }
+    .cms-form .form-control, .cms-form .form-select {
+      border-radius:10px; border:1.5px solid #e5e7eb;
+      font-size:14px; padding:10px 14px;
+    }
+    .cms-form .form-control:focus, .cms-form .form-select:focus {
+      border-color:var(--color-secondary);
+      box-shadow:0 0 0 3px rgba(0,166,166,0.1);
+    }
+    .color-swatch { width:36px; height:36px; border-radius:8px; border:2px solid #e5e7eb; cursor:pointer; }
+
+    /* ---- Activity Feed ---- */
+    .activity-item { display:flex; gap:12px; padding:10px 0; border-bottom:1px solid #f9f9f9; }
+    .activity-item:last-child { border-bottom:none; }
+    .activity-dot  { width:8px; height:8px; border-radius:50%; flex-shrink:0; margin-top:5px; }
+    .dot-teal   { background:var(--color-secondary); }
+    .dot-amber  { background:var(--color-accent); }
+    .dot-green  { background:#10b981; }
+    .dot-red    { background:#ef4444; }
+    .activity-text  { font-size:13px; color:#374151; }
+    .activity-time  { font-size:11px; color:#9ca3af; margin-top:2px; }
+
+    /* ---- Chat list ---- */
+    .chat-row { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid #f9f9f9; }
+    .chat-av  { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,var(--color-secondary),#004e4e); display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;flex-shrink:0; }
+
+    /* ---- Responsive ---- */
+    @media (max-width:991px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .topbar { left:0; }
+      .main-content { margin-left:0; }
+      .mobile-toggle { display:flex; }
+    }
+
+    /* ---- Btn helpers ---- */
+    .btn-teal { background:var(--color-secondary); color:#fff; border:none; border-radius:8px; padding:7px 14px; font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; }
+    .btn-teal:hover { background:#008f8f; }
+    .btn-sm-outline { background:transparent; border:1.5px solid #e5e7eb; border-radius:8px; padding:5px 12px; font-size:12px; font-weight:600; color:#6b7280; cursor:pointer; transition:all .2s; }
+    .btn-sm-outline:hover { border-color:var(--color-secondary); color:var(--color-secondary); }
+    .btn-danger-sm { background:#fef2f2; color:#991b1b; border:none; border-radius:8px; padding:5px 12px; font-size:12px; font-weight:600; cursor:pointer; }
+    .btn-danger-sm:hover { background:#fee2e2; }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     SIDEBAR
+============================================================ -->
+<aside class="sidebar" id="sidebar">
+
+  <div class="sidebar-logo">
+    <div class="logo-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
+    <div>
+      <div class="logo-text">StayMaster <span style="color:var(--color-accent)">Pro</span></div>
+      <div class="logo-sub">Admin Dashboard</div>
+    </div>
+  </div>
+
+  <nav style="padding:10px 12px; flex:1;">
+
+    <div class="sidebar-section">Overview</div>
+    <ul style="list-style:none;padding:0;margin:0;">
+      <li class="nav-item">
+        <a href="#" class="nav-link-admin active" data-panel="dashboard">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+          Dashboard
+        </a>
+      </li>
+    </ul>
+
+    <div class="sidebar-section">Website CMS</div>
+    <ul style="list-style:none;padding:0;margin:0;">
+      <li class="nav-item"><a href="#" class="nav-link-admin" data-panel="cms-branding">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="4.5"/><path d="M2 20h3l3-5 3 5h3l3-5 3 5h3"/></svg>
+        Branding & Hero
+      </a></li>
+      <li class="nav-item"><a href="#" class="nav-link-admin" data-panel="cms-features">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Features
+      </a></li>
+      <li class="nav-item"><a href="#" class="nav-link-admin" data-panel="cms-pricing">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+        Pricing Plans
+      </a></li>
+      <li class="nav-item"><a href="#" class="nav-link-admin" data-panel="cms-testimonials">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Testimonials
+      </a></li>
+      <li class="nav-item"><a href="#" class="nav-link-admin" data-panel="cms-faq">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+        FAQ
+      </a></li>
+      <li class="nav-item"><a href="#" class="nav-link-admin" data-panel="cms-seo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        SEO Settings
+      </a></li>
+      <li class="nav-item"><a href="#" class="nav-link-admin" data-panel="cms-links">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        Link Management
+      </a></li>
+      <li class="nav-item"><a href="#" class="nav-link-admin" data-panel="media">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+        Media Library
+      </a></li>
+    </ul>
+
+    <div class="sidebar-section">SaaS Management</div>
+    <ul style="list-style:none;padding:0;margin:0;">
+      <li class="nav-item"><a href="#" class="nav-link-admin" data-panel="customers">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Customers
+      </a></li>
+      <li class="nav-item"><a href="#" class="nav-link-admin" data-panel="billing">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="1" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Billing & Subscriptions
+      </a></li>
+    </ul>
+
+    <div class="sidebar-section">AI Chatbot</div>
+    <ul style="list-style:none;padding:0;margin:0;">
+      <li class="nav-item"><a href="#" class="nav-link-admin" data-panel="chatbot">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+        Chatbot Config
+      </a></li>
+      <li class="nav-item"><a href="#" class="nav-link-admin" data-panel="chat-history">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Chat History
+        <span class="nav-badge">12</span>
+      </a></li>
+    </ul>
+
+    <div class="sidebar-section">Leads & Sales</div>
+    <ul style="list-style:none;padding:0;margin:0;">
+      <li class="nav-item"><a href="#" class="nav-link-admin" data-panel="leads">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Leads & Requests
+        <span class="nav-badge">7</span>
+      </a></li>
+    </ul>
+
+    <div class="sidebar-section">Security</div>
+    <ul style="list-style:none;padding:0;margin:0;">
+      <li class="nav-item"><a href="#" class="nav-link-admin" data-panel="users">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Admin Users & Roles
+      </a></li>
+      <li class="nav-item"><a href="#" class="nav-link-admin" data-panel="audit">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Audit Logs
+      </a></li>
+    </ul>
+
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="admin-user">
+      <div class="admin-avatar">SA</div>
+      <div>
+        <div class="admin-name">Super Admin</div>
+        <div class="admin-role">Full Access</div>
+      </div>
+      <a href="login.html" style="margin-left:auto;color:rgba(255,255,255,0.4);text-decoration:none;" title="Sign out">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+      </a>
+    </div>
+  </div>
+
+</aside>
+
+<!-- ============================================================
+     TOPBAR
+============================================================ -->
+<header class="topbar">
+  <div class="d-flex align-items-center gap-3">
+    <button class="icon-btn mobile-toggle" id="mobileToggle">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" x2="21" y1="6" y2="6"/><line x1="3" x2="21" y1="12" y2="12"/><line x1="3" x2="21" y1="18" y2="18"/></svg>
+    </button>
+    <div class="topbar-title" id="topbarTitle">Dashboard</div>
+  </div>
+  <div class="topbar-actions">
+    <a href="/" target="_blank" class="btn-sm-outline" style="text-decoration:none;display:flex;align-items:center;gap:6px;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
+      View Website
+    </a>
+    <button class="icon-btn" title="Notifications">
+      <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <div class="notif-dot"></div>
+    </button>
+    <div class="admin-avatar" style="width:34px;height:34px;font-size:13px;cursor:pointer;">SA</div>
+  </div>
+</header>
+
+<!-- ============================================================
+     MAIN CONTENT
+============================================================ -->
+<main class="main-content">
+
+  <!-- ======================== DASHBOARD PANEL ======================== -->
+  <div class="admin-panel active" id="panel-dashboard">
+
+    <!-- Stat Cards -->
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-lg-3">
+        <div class="stat-card">
+          <div class="stat-card-icon icon-teal">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="stat-num">247</div>
+          <div class="stat-lbl">Active Customers</div>
+          <div class="stat-chg chg-up">▲ 12% this month</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card">
+          <div class="stat-card-icon icon-amber">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+          </div>
+          <div class="stat-num">38</div>
+          <div class="stat-lbl">Trial Users</div>
+          <div class="stat-chg chg-up">▲ 5 new today</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card">
+          <div class="stat-card-icon icon-blue">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div class="stat-num">7</div>
+          <div class="stat-lbl">New Demo Requests</div>
+          <div class="stat-chg chg-up">▲ 3 pending</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card">
+          <div class="stat-card-icon icon-green">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="1" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div class="stat-num">$36,820</div>
+          <div class="stat-lbl">MRR</div>
+          <div class="stat-chg chg-up">▲ 8.4% vs last month</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card">
+          <div class="stat-card-icon icon-purple">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div class="stat-num">1,240</div>
+          <div class="stat-lbl">AI Chatbot Conversations</div>
+          <div class="stat-chg chg-up">▲ 320 this week</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card">
+          <div class="stat-card-icon icon-teal">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          </div>
+          <div class="stat-num">18,450</div>
+          <div class="stat-lbl">Website Visitors (30d)</div>
+          <div class="stat-chg chg-up">▲ 14% vs prev period</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card">
+          <div class="stat-card-icon icon-amber">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+          </div>
+          <div class="stat-num">6.8%</div>
+          <div class="stat-lbl">Trial Conversion Rate</div>
+          <div class="stat-chg chg-down">▼ 0.3% vs last month</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card">
+          <div class="stat-card-icon icon-red">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg>
+          </div>
+          <div class="stat-num">4</div>
+          <div class="stat-lbl">Expired Trials</div>
+          <div class="stat-chg" style="color:#9ca3af;">Awaiting follow-up</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-3">
+      <!-- Recent Activity -->
+      <div class="col-lg-6">
+        <div class="card-section">
+          <div class="card-section-header">
+            <div class="card-section-title">Recent Activity</div>
+            <button class="btn-sm-outline">View All</button>
+          </div>
+          <div class="card-section-body" style="max-height:320px;overflow-y:auto;">
+            <div class="activity-item">
+              <div class="activity-dot dot-teal"></div>
+              <div><div class="activity-text">New trial registration — <strong>maria@oceanhomes.com</strong></div><div class="activity-time">2 minutes ago</div></div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot dot-amber"></div>
+              <div><div class="activity-text">Demo request from <strong>James T.</strong> — 15 properties</div><div class="activity-time">18 minutes ago</div></div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot dot-green"></div>
+              <div><div class="activity-text">Subscription upgraded — Growth → Professional</div><div class="activity-time">1 hour ago</div></div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot dot-teal"></div>
+              <div><div class="activity-text">Contact form: <strong>Sofia Chen</strong> — Enterprise inquiry</div><div class="activity-time">2 hours ago</div></div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot dot-red"></div>
+              <div><div class="activity-text">Failed login attempt from IP 192.168.1.42</div><div class="activity-time">3 hours ago</div></div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot dot-green"></div>
+              <div><div class="activity-text">Invoice #INV-2048 paid — $299.00</div><div class="activity-time">5 hours ago</div></div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot dot-amber"></div>
+              <div><div class="activity-text">New AI chat session — guest inquiry about early check-in</div><div class="activity-time">Yesterday</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Leads -->
+      <div class="col-lg-6">
+        <div class="card-section">
+          <div class="card-section-header">
+            <div class="card-section-title">Recent Leads</div>
+            <button class="btn-teal" onclick="showPanel('leads')">View All</button>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="admin-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Plan</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Maria Rodriguez</strong><br/><small style="color:#9ca3af;">maria@oceanhomes.com</small></td><td>Trial</td><td>Growth</td><td><span class="badge-status badge-new">New</span></td></tr>
+                <tr><td><strong>James Thompson</strong><br/><small style="color:#9ca3af;">james@airbnb.host</small></td><td>Demo</td><td>Professional</td><td><span class="badge-status badge-pending">Pending</span></td></tr>
+                <tr><td><strong>Sofia Chen</strong><br/><small style="color:#9ca3af;">sofia@rentalco.com</small></td><td>Contact</td><td>Enterprise</td><td><span class="badge-status badge-open">Open</span></td></tr>
+                <tr><td><strong>Ahmed Khalil</strong><br/><small style="color:#9ca3af;">ahmed@boutiquehotel.ae</small></td><td>Trial</td><td>Starter</td><td><span class="badge-status badge-resolved">Converted</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== CMS — BRANDING ======================== -->
+  <div class="admin-panel" id="panel-cms-branding">
+    <div class="card-section mb-3">
+      <div class="card-section-header"><div class="card-section-title">Branding & Hero Section</div><button class="btn-teal" onclick="saveToast()">Save Changes</button></div>
+      <div class="card-section-body">
+        <div class="admin-tabs">
+          <div class="admin-tab active" onclick="switchTab(this,'branding-tab')">Branding</div>
+          <div class="admin-tab" onclick="switchTab(this,'hero-tab')">Hero Section</div>
+          <div class="admin-tab" onclick="switchTab(this,'links-tab')">CTA Links</div>
+        </div>
+        <div id="branding-tab" class="tab-pane active">
+          <div class="cms-form row g-3">
+            <div class="col-md-6"><label>Company Name</label><input type="text" class="form-control" value="StayMaster Pro" /></div>
+            <div class="col-md-6"><label>Tagline</label><input type="text" class="form-control" value="Manage Rentals Smarter" /></div>
+            <div class="col-md-4"><label>Primary Color</label><div class="d-flex gap-2 align-items-center"><input type="color" class="form-control form-control-color" value="#0B1F3A" /><input type="text" class="form-control" value="#0B1F3A" /></div></div>
+            <div class="col-md-4"><label>Secondary Color</label><div class="d-flex gap-2 align-items-center"><input type="color" class="form-control form-control-color" value="#00A6A6" /><input type="text" class="form-control" value="#00A6A6" /></div></div>
+            <div class="col-md-4"><label>Accent Color</label><div class="d-flex gap-2 align-items-center"><input type="color" class="form-control form-control-color" value="#F4C95D" /><input type="text" class="form-control" value="#F4C95D" /></div></div>
+            <div class="col-md-6"><label>Logo Upload</label><input type="file" class="form-control" accept="image/*" /></div>
+            <div class="col-md-6"><label>Favicon Upload</label><input type="file" class="form-control" accept="image/x-icon,image/png" /></div>
+            <div class="col-md-6"><label>Font</label><select class="form-select"><option>Inter</option><option>Poppins</option><option>Montserrat</option><option>Nunito</option></select></div>
+          </div>
+        </div>
+        <div id="hero-tab" class="tab-pane" style="display:none;">
+          <div class="cms-form row g-3">
+            <div class="col-12"><label>Hero Headline</label><input type="text" class="form-control" value="Manage Your Vacation Rentals Smarter, Faster, and More Profitably" /></div>
+            <div class="col-12"><label>Hero Subheadline</label><textarea class="form-control" rows="3">All-in-one property management software for reservations, guest communication, cleaning, maintenance, owner reporting, upsells, payments, and multi-platform rental operations.</textarea></div>
+            <div class="col-md-4"><label>Primary CTA Text</label><input type="text" class="form-control" value="Start Free Trial" /></div>
+            <div class="col-md-4"><label>Secondary CTA Text</label><input type="text" class="form-control" value="Book Live Demo" /></div>
+            <div class="col-md-4"><label>Third CTA Text</label><input type="text" class="form-control" value="Talk to AI Assistant" /></div>
+            <div class="col-12"><label>Hero Background Image</label><input type="file" class="form-control" accept="image/*" /></div>
+          </div>
+        </div>
+        <div id="links-tab" class="tab-pane" style="display:none;">
+          <div class="cms-form row g-3">
+            <div class="col-12"><label>Trial / Register URL</label><input type="url" class="form-control" value="https://app.yourdomain.com/register" /></div>
+            <div class="col-12"><label>App Login URL</label><input type="url" class="form-control" value="https://app.yourdomain.com/login" /></div>
+            <div class="col-12"><label>Demo / Calendly URL</label><input type="url" class="form-control" value="https://calendly.com/yourcompany/demo" /></div>
+            <div class="col-12"><label>AI Chatbot URL</label><input type="url" class="form-control" value="https://chat.yourdomain.com" /></div>
+            <div class="col-12"><label>Support URL</label><input type="url" class="form-control" value="https://help.yourdomain.com" /></div>
+            <div class="col-md-6"><label>Sales Email</label><input type="email" class="form-control" value="sales@yourcompany.com" /></div>
+            <div class="col-md-6"><label>Support Email</label><input type="email" class="form-control" value="support@yourcompany.com" /></div>
+            <div class="col-md-6"><label>Privacy Policy URL</label><input type="url" class="form-control" value="/privacy" /></div>
+            <div class="col-md-6"><label>Terms of Service URL</label><input type="url" class="form-control" value="/terms" /></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== CMS — PRICING ======================== -->
+  <div class="admin-panel" id="panel-cms-pricing">
+    <div class="card-section">
+      <div class="card-section-header">
+        <div class="card-section-title">Pricing Plans</div>
+        <button class="btn-teal" onclick="alert('Add Plan modal coming soon')">+ Add Plan</button>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="admin-table">
+          <thead><tr><th>Plan</th><th>Price</th><th>Properties</th><th>Popular</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Starter</strong></td><td>$49/mo</td><td>2</td><td>—</td><td><span class="badge-status badge-active">Active</span></td><td><button class="btn-sm-outline me-1">Edit</button><button class="btn-danger-sm">Delete</button></td></tr>
+            <tr><td><strong>Growth</strong></td><td>$149/mo</td><td>10</td><td>✅ Yes</td><td><span class="badge-status badge-active">Active</span></td><td><button class="btn-sm-outline me-1">Edit</button><button class="btn-danger-sm">Delete</button></td></tr>
+            <tr><td><strong>Professional</strong></td><td>$299/mo</td><td>30</td><td>—</td><td><span class="badge-status badge-active">Active</span></td><td><button class="btn-sm-outline me-1">Edit</button><button class="btn-danger-sm">Delete</button></td></tr>
+            <tr><td><strong>Enterprise</strong></td><td>Custom</td><td>Unlimited</td><td>—</td><td><span class="badge-status badge-active">Active</span></td><td><button class="btn-sm-outline me-1">Edit</button><button class="btn-danger-sm">Delete</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== CUSTOMERS ======================== -->
+  <div class="admin-panel" id="panel-customers">
+    <div class="card-section">
+      <div class="card-section-header">
+        <div class="card-section-title">Customers</div>
+        <input type="text" class="form-control form-control-sm" placeholder="Search customers…" style="max-width:220px;border-radius:8px;" />
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="admin-table">
+          <thead><tr><th>Customer</th><th>Plan</th><th>Properties</th><th>Status</th><th>Billing</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Maria Rodriguez</strong><br/><small style="color:#9ca3af;">maria@oceanhomes.com</small></td><td>Growth</td><td>8</td><td><span class="badge-status badge-active">Active</span></td><td><span class="badge-status badge-paid">Paid</span></td><td><button class="btn-sm-outline">View</button></td></tr>
+            <tr><td><strong>James Thompson</strong><br/><small style="color:#9ca3af;">james@airbnb.host</small></td><td>Starter</td><td>2</td><td><span class="badge-status badge-trial">Trial</span></td><td><span class="badge-status badge-trial">Trial</span></td><td><button class="btn-sm-outline">View</button></td></tr>
+            <tr><td><strong>Sofia Chen</strong><br/><small style="color:#9ca3af;">sofia@rentalco.com</small></td><td>Professional</td><td>22</td><td><span class="badge-status badge-active">Active</span></td><td><span class="badge-status badge-paid">Paid</span></td><td><button class="btn-sm-outline">View</button></td></tr>
+            <tr><td><strong>Ahmed Khalil</strong><br/><small style="color:#9ca3af;">ahmed@boutiquehotel.ae</small></td><td>Professional</td><td>18</td><td><span class="badge-status badge-active">Active</span></td><td><span class="badge-status badge-unpaid">Overdue</span></td><td><button class="btn-sm-outline">View</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== BILLING ======================== -->
+  <div class="admin-panel" id="panel-billing">
+    <div class="row g-3 mb-3">
+      <div class="col-md-3"><div class="stat-card"><div class="stat-num" style="color:var(--color-secondary);">247</div><div class="stat-lbl">Active Paid</div></div></div>
+      <div class="col-md-3"><div class="stat-card"><div class="stat-num" style="color:#d97706;">38</div><div class="stat-lbl">On Trial</div></div></div>
+      <div class="col-md-3"><div class="stat-card"><div class="stat-num" style="color:#ef4444;">4</div><div class="stat-lbl">Expired Trials</div></div></div>
+      <div class="col-md-3"><div class="stat-card"><div class="stat-num" style="color:#10b981;">$36,820</div><div class="stat-lbl">MRR</div></div></div>
+    </div>
+    <div class="card-section">
+      <div class="card-section-header"><div class="card-section-title">Recent Invoices</div></div>
+      <div style="overflow-x:auto;">
+        <table class="admin-table">
+          <thead><tr><th>Invoice</th><th>Customer</th><th>Plan</th><th>Amount</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td>#INV-2051</td><td>Maria Rodriguez</td><td>Growth</td><td>$149.00</td><td>Jun 1, 2026</td><td><span class="badge-status badge-paid">Paid</span></td><td><button class="btn-sm-outline">PDF</button></td></tr>
+            <tr><td>#INV-2050</td><td>Sofia Chen</td><td>Professional</td><td>$299.00</td><td>Jun 1, 2026</td><td><span class="badge-status badge-paid">Paid</span></td><td><button class="btn-sm-outline">PDF</button></td></tr>
+            <tr><td>#INV-2049</td><td>Ahmed Khalil</td><td>Professional</td><td>$299.00</td><td>Jun 1, 2026</td><td><span class="badge-status badge-unpaid">Overdue</span></td><td><button class="btn-sm-outline">Resend</button></td></tr>
+            <tr><td>#INV-2048</td><td>David Martinez</td><td>Enterprise</td><td>$799.00</td><td>May 1, 2026</td><td><span class="badge-status badge-paid">Paid</span></td><td><button class="btn-sm-outline">PDF</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== CHATBOT CONFIG ======================== -->
+  <div class="admin-panel" id="panel-chatbot">
+    <div class="card-section">
+      <div class="card-section-header"><div class="card-section-title">AI Chatbot Configuration</div><button class="btn-teal" onclick="saveToast()">Save Config</button></div>
+      <div class="card-section-body">
+        <div class="cms-form row g-3">
+          <div class="col-md-6"><label>Chatbot Name</label><input type="text" class="form-control" value="StayMaster AI" /></div>
+          <div class="col-md-6"><label>Welcome Message</label><input type="text" class="form-control" value="Hi! I'm your StayMaster AI Assistant. How can I help you today?" /></div>
+          <div class="col-12"><label>FAQ Knowledge Base</label><textarea class="form-control" rows="5" placeholder="Add Q&A pairs, one per line: Q: ... | A: ...">Q: What is check-in time? | A: Check-in is at 3:00 PM unless early check-in is arranged.
+Q: Is parking available? | A: Free covered parking is available for 1 vehicle.
+Q: Can I check in early? | A: Early check-in from 1:00 PM is $25 extra.</textarea></div>
+          <div class="col-12"><label>Upsell Suggestions (one per line)</label><textarea class="form-control" rows="4">Early check-in — $25
+Late check-out — $35
+Airport transfer — $45
+Grocery package — $60</textarea></div>
+          <div class="col-md-6"><label>Supported Languages</label><input type="text" class="form-control" value="English, Spanish, Dutch, Portuguese" /></div>
+          <div class="col-md-6"><label>Escalation Email (human support)</label><input type="email" class="form-control" value="support@yourcompany.com" /></div>
+          <div class="col-12">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="escSwitch" checked />
+              <label class="form-check-label" for="escSwitch">Enable escalation to human support when AI can't answer</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== CHAT HISTORY ======================== -->
+  <div class="admin-panel" id="panel-chat-history">
+    <div class="card-section">
+      <div class="card-section-header"><div class="card-section-title">AI Chat History</div></div>
+      <div class="card-section-body">
+        <div id="chatList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== LEADS ======================== -->
+  <div class="admin-panel" id="panel-leads">
+    <div class="card-section">
+      <div class="card-section-header"><div class="card-section-title">Leads & Requests</div></div>
+      <div style="overflow-x:auto;">
+        <table class="admin-table">
+          <thead><tr><th>Name</th><th>Email</th><th>Type</th><th>Properties</th><th>Plan Interest</th><th>Status</th><th>Received</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Maria Rodriguez</strong></td><td>maria@oceanhomes.com</td><td>Trial</td><td>8</td><td>Growth</td><td><span class="badge-status badge-new">New</span></td><td>Today</td><td><button class="btn-sm-outline me-1">Follow Up</button></td></tr>
+            <tr><td><strong>James Thompson</strong></td><td>james@airbnb.host</td><td>Demo</td><td>6</td><td>Professional</td><td><span class="badge-status badge-pending">Pending</span></td><td>Today</td><td><button class="btn-sm-outline me-1">Schedule</button></td></tr>
+            <tr><td><strong>Sofia Chen</strong></td><td>sofia@rentalco.com</td><td>Contact</td><td>22</td><td>Enterprise</td><td><span class="badge-status badge-open">Open</span></td><td>Yesterday</td><td><button class="btn-sm-outline me-1">Assign</button></td></tr>
+            <tr><td><strong>Ahmed Khalil</strong></td><td>ahmed@boutique.ae</td><td>Trial</td><td>18</td><td>Professional</td><td><span class="badge-status badge-resolved">Converted</span></td><td>Jun 15</td><td><button class="btn-sm-outline">View</button></td></tr>
+            <tr><td><strong>Laura Perez</strong></td><td>laura@caribvillas.com</td><td>Demo</td><td>15</td><td>Growth</td><td><span class="badge-status badge-pending">Pending</span></td><td>Jun 14</td><td><button class="btn-sm-outline me-1">Schedule</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== ADMIN USERS ======================== -->
+  <div class="admin-panel" id="panel-users">
+    <div class="card-section mb-3">
+      <div class="card-section-header">
+        <div class="card-section-title">Admin Users & Roles</div>
+        <button class="btn-teal">+ Add User</button>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="admin-table">
+          <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>2FA</th><th>Last Login</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Super Admin</strong></td><td>admin@yourcompany.com</td><td><span class="badge-status" style="background:#ede9fe;color:#5b21b6;">Super Admin</span></td><td>✅</td><td>Just now</td><td><span class="badge-status badge-active">Active</span></td><td>—</td></tr>
+            <tr><td><strong>Sarah Johnson</strong></td><td>sarah@yourcompany.com</td><td><span class="badge-status" style="background:#dbeafe;color:#1e40af;">Administrator</span></td><td>✅</td><td>1h ago</td><td><span class="badge-status badge-active">Active</span></td><td><button class="btn-sm-outline me-1">Edit</button><button class="btn-danger-sm">Disable</button></td></tr>
+            <tr><td><strong>Mark Rivera</strong></td><td>mark@yourcompany.com</td><td><span class="badge-status" style="background:#ecfdf5;color:#065f46;">Marketing</span></td><td>—</td><td>2d ago</td><td><span class="badge-status badge-active">Active</span></td><td><button class="btn-sm-outline me-1">Edit</button><button class="btn-danger-sm">Disable</button></td></tr>
+            <tr><td><strong>Lisa Chen</strong></td><td>lisa@yourcompany.com</td><td><span class="badge-status" style="background:#fff7ed;color:#9a3412;">Sales Manager</span></td><td>—</td><td>5h ago</td><td><span class="badge-status badge-active">Active</span></td><td><button class="btn-sm-outline me-1">Edit</button><button class="btn-danger-sm">Disable</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card-section">
+      <div class="card-section-header"><div class="card-section-title">Role Permissions</div></div>
+      <div style="overflow-x:auto;">
+        <table class="admin-table">
+          <thead><tr><th>Permission</th><th>Super Admin</th><th>Administrator</th><th>Marketing</th><th>Sales</th><th>Support</th><th>Viewer</th></tr></thead>
+          <tbody>
+            <tr><td>Website CMS</td><td>✅</td><td>✅</td><td>✅</td><td>—</td><td>—</td><td>👁️</td></tr>
+            <tr><td>Customer Management</td><td>✅</td><td>✅</td><td>—</td><td>✅</td><td>✅</td><td>👁️</td></tr>
+            <tr><td>Billing & Subscriptions</td><td>✅</td><td>✅</td><td>—</td><td>✅</td><td>—</td><td>—</td></tr>
+            <tr><td>Chatbot Config</td><td>✅</td><td>✅</td><td>✅</td><td>—</td><td>✅</td><td>—</td></tr>
+            <tr><td>Leads Management</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>👁️</td></tr>
+            <tr><td>Admin Users</td><td>✅</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td>Audit Logs</td><td>✅</td><td>✅</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== AUDIT LOGS ======================== -->
+  <div class="admin-panel" id="panel-audit">
+    <div class="card-section">
+      <div class="card-section-header">
+        <div class="card-section-title">Audit Logs</div>
+        <div class="d-flex gap-2">
+          <input type="text" class="form-control form-control-sm" placeholder="Filter…" style="max-width:180px;border-radius:8px;" />
+          <button class="btn-sm-outline">Export CSV</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="admin-table">
+          <thead><tr><th>Timestamp</th><th>User</th><th>IP Address</th><th>Action</th><th>Target</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td style="white-space:nowrap;">2026-06-19 14:32:01</td><td>admin</td><td>192.168.1.10</td><td>LOGIN</td><td>Admin Dashboard</td><td><span class="badge-status badge-active">Success</span></td></tr>
+            <tr><td style="white-space:nowrap;">2026-06-19 14:28:45</td><td>sarah</td><td>10.0.0.25</td><td>UPDATE</td><td>Pricing Plan: Growth</td><td><span class="badge-status badge-active">Success</span></td></tr>
+            <tr><td style="white-space:nowrap;">2026-06-19 13:55:12</td><td>unknown</td><td>192.168.1.42</td><td>LOGIN_FAIL</td><td>Admin Dashboard</td><td><span class="badge-status badge-unpaid">Failed</span></td></tr>
+            <tr><td style="white-space:nowrap;">2026-06-19 13:30:00</td><td>mark</td><td>10.0.0.18</td><td>CREATE</td><td>FAQ Item #12</td><td><span class="badge-status badge-active">Success</span></td></tr>
+            <tr><td style="white-space:nowrap;">2026-06-19 12:10:33</td><td>admin</td><td>192.168.1.10</td><td>DELETE</td><td>Testimonial #4</td><td><span class="badge-status badge-active">Success</span></td></tr>
+            <tr><td style="white-space:nowrap;">2026-06-19 11:05:22</td><td>lisa</td><td>10.0.0.30</td><td>UPDATE</td><td>Lead #89 — Converted</td><td><span class="badge-status badge-active">Success</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== CMS — FEATURES ======================== -->
+  <div class="admin-panel" id="panel-cms-features">
+    <div class="row g-3">
+      <!-- Feature List -->
+      <div class="col-lg-7">
+        <div class="card-section">
+          <div class="card-section-header">
+            <div class="card-section-title">Feature Cards</div>
+            <button class="btn-teal" onclick="showFeatureForm()">+ Add Feature</button>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="admin-table" id="featuresTable">
+              <thead><tr><th>⠿</th><th>Icon</th><th>Title</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody id="featuresTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- Feature Form -->
+      <div class="col-lg-5">
+        <div class="card-section" id="featureFormCard">
+          <div class="card-section-header"><div class="card-section-title" id="featureFormTitle">Add Feature</div></div>
+          <div class="card-section-body">
+            <div class="cms-form" id="featureForm">
+              <div class="mb-3"><label>Icon Name (Lucide)</label><input type="text" class="form-control" id="fIcon" placeholder="e.g. home, calendar-days" /></div>
+              <div class="mb-3"><label>Title</label><input type="text" class="form-control" id="fTitle" placeholder="Feature title" /></div>
+              <div class="mb-3"><label>Description</label><textarea class="form-control" id="fDesc" rows="3" placeholder="Short feature description…"></textarea></div>
+              <div class="mb-3">
+                <div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="fActive" checked /><label class="form-check-label" for="fActive">Active (visible on website)</label></div>
+              </div>
+              <div class="d-flex gap-2">
+                <button class="btn-teal" style="flex:1;" onclick="saveFeature()">Save Feature</button>
+                <button class="btn-sm-outline" onclick="resetFeatureForm()">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== CMS — TESTIMONIALS ======================== -->
+  <div class="admin-panel" id="panel-cms-testimonials">
+    <div class="row g-3">
+      <div class="col-lg-7">
+        <div class="card-section">
+          <div class="card-section-header">
+            <div class="card-section-title">Testimonials</div>
+            <button class="btn-teal" onclick="showTestimonialForm()">+ Add Testimonial</button>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="admin-table">
+              <thead><tr><th>Name</th><th>Role</th><th>Stars</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody id="testimonialsTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="card-section">
+          <div class="card-section-header"><div class="card-section-title" id="testimFormTitle">Add Testimonial</div></div>
+          <div class="card-section-body">
+            <div class="cms-form">
+              <div class="mb-3"><label>Customer Name</label><input type="text" class="form-control" id="tName" placeholder="Full name" /></div>
+              <div class="mb-3"><label>Role / Company</label><input type="text" class="form-control" id="tRole" placeholder="e.g. Villa Manager, Aruba" /></div>
+              <div class="mb-3"><label>Testimonial Text</label><textarea class="form-control" id="tText" rows="4" placeholder="What did they say?"></textarea></div>
+              <div class="mb-3"><label>Star Rating</label>
+                <div class="d-flex gap-2 align-items-center">
+                  <input type="range" class="form-range" id="tStars" min="1" max="5" value="5" oninput="document.getElementById('tStarsVal').textContent=this.value+' ★'" />
+                  <span id="tStarsVal" style="font-size:14px;font-weight:600;color:#d97706;white-space:nowrap;">5 ★</span>
+                </div>
+              </div>
+              <div class="mb-3"><label>Photo Upload (optional)</label><input type="file" class="form-control" accept="image/*" /></div>
+              <div class="mb-3"><div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="tActive" checked /><label class="form-check-label" for="tActive">Active</label></div></div>
+              <div class="d-flex gap-2">
+                <button class="btn-teal" style="flex:1;" onclick="saveTestimonial()">Save Testimonial</button>
+                <button class="btn-sm-outline" onclick="resetTestimonialForm()">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== CMS — FAQ ======================== -->
+  <div class="admin-panel" id="panel-cms-faq">
+    <div class="row g-3">
+      <div class="col-lg-7">
+        <div class="card-section">
+          <div class="card-section-header">
+            <div class="card-section-title">FAQ Items</div>
+            <button class="btn-teal" onclick="showFaqForm()">+ Add FAQ</button>
+          </div>
+          <div id="faqList" style="padding:12px 20px;"></div>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="card-section">
+          <div class="card-section-header"><div class="card-section-title" id="faqFormTitle">Add FAQ Item</div></div>
+          <div class="card-section-body">
+            <div class="cms-form">
+              <div class="mb-3"><label>Question</label><input type="text" class="form-control" id="faqQ" placeholder="e.g. Can I manage multiple properties?" /></div>
+              <div class="mb-3"><label>Answer</label><textarea class="form-control" id="faqA" rows="5" placeholder="Write the answer here…"></textarea></div>
+              <div class="mb-3"><div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="faqActive" checked /><label class="form-check-label" for="faqActive">Active</label></div></div>
+              <div class="d-flex gap-2">
+                <button class="btn-teal" style="flex:1;" onclick="saveFaq()">Save FAQ</button>
+                <button class="btn-sm-outline" onclick="resetFaqForm()">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== CMS — SEO ======================== -->
+  <div class="admin-panel" id="panel-cms-seo">
+    <div class="card-section">
+      <div class="card-section-header"><div class="card-section-title">SEO Settings</div><button class="btn-teal" onclick="saveToast()">Save Changes</button></div>
+      <div class="card-section-body">
+        <div class="cms-form row g-3">
+          <div class="col-12"><label>Meta Title</label><input type="text" class="form-control" value="StayMaster Pro | Vacation Rental Property Management Software" /><div class="form-text text-muted"><span id="seoTitleCount">67</span>/70 characters</div></div>
+          <div class="col-12"><label>Meta Description</label><textarea class="form-control" rows="3" oninput="document.getElementById('seoDescCount').textContent=this.value.length">All-in-one vacation rental property management software for Airbnb hosts, property managers, villas, apartments, and boutique hotels.</textarea><div class="form-text text-muted"><span id="seoDescCount">134</span>/160 characters</div></div>
+          <div class="col-12"><label>Keywords (comma-separated)</label><input type="text" class="form-control" value="vacation rental software, property management system, Airbnb host software, short-term rental management" /></div>
+          <div class="col-md-6"><label>Open Graph Image URL</label><input type="url" class="form-control" placeholder="https://yourdomain.com/og-image.jpg" /></div>
+          <div class="col-md-6"><label>Twitter Card Type</label><select class="form-select"><option>summary_large_image</option><option>summary</option></select></div>
+          <div class="col-md-6"><label>Canonical URL</label><input type="url" class="form-control" value="https://staymasterpro.com" /></div>
+          <div class="col-md-6"><label>Robots Meta</label><select class="form-select"><option>index, follow</option><option>noindex, nofollow</option><option>index, nofollow</option></select></div>
+          <div class="col-12">
+            <div style="background:#f9fafb;border-radius:12px;padding:16px;border:1px solid #e5e7eb;">
+              <div style="font-size:12px;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:10px;">Google Preview</div>
+              <div style="font-size:18px;color:#1a0dab;font-weight:400;">StayMaster Pro | Vacation Rental Property Management Software</div>
+              <div style="font-size:13px;color:#006621;">https://staymasterpro.com</div>
+              <div style="font-size:14px;color:#545454;margin-top:4px;">All-in-one vacation rental property management software for Airbnb hosts, property managers, villas, apartments, and boutique hotels.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== CMS — LINK MANAGEMENT ======================== -->
+  <div class="admin-panel" id="panel-cms-links">
+    <div class="card-section">
+      <div class="card-section-header"><div class="card-section-title">Link Management</div><button class="btn-teal" onclick="saveToast()">Save All Links</button></div>
+      <div class="card-section-body">
+        <p class="text-muted mb-4" style="font-size:14px;">These links power every CTA button on the public website. Changes apply sitewide instantly.</p>
+        <div class="cms-form row g-3">
+          <div class="col-12"><div style="font-size:12px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Application Links</div></div>
+          <div class="col-md-6"><label>Free Trial / Register URL</label><input type="url" class="form-control" value="https://app.yourdomain.com/register" /><div class="form-text">Used by all "Start Free Trial" buttons</div></div>
+          <div class="col-md-6"><label>App Login URL</label><input type="url" class="form-control" value="https://app.yourdomain.com/login" /><div class="form-text">Used by the Login button in the footer</div></div>
+          <div class="col-md-6"><label>Demo / Calendly URL</label><input type="url" class="form-control" value="https://calendly.com/yourcompany/demo" /><div class="form-text">Used by all "Book Demo" and "Schedule Demo" buttons</div></div>
+          <div class="col-md-6"><label>AI Chatbot URL</label><input type="url" class="form-control" value="https://chat.yourdomain.com" /><div class="form-text">Used by "Launch AI Assistant" buttons</div></div>
+          <div class="col-12"><div style="font-size:12px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin:8px 0;">Contact & Support</div></div>
+          <div class="col-md-6"><label>Sales Email</label><input type="email" class="form-control" value="sales@yourcompany.com" /></div>
+          <div class="col-md-6"><label>Support Email</label><input type="email" class="form-control" value="support@yourcompany.com" /></div>
+          <div class="col-md-6"><label>Phone Number</label><input type="tel" class="form-control" value="+297 XXX XXXX" /></div>
+          <div class="col-md-6"><label>Support / Help Center URL</label><input type="url" class="form-control" value="https://help.yourdomain.com" /></div>
+          <div class="col-12"><div style="font-size:12px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin:8px 0;">Legal Pages</div></div>
+          <div class="col-md-6"><label>Privacy Policy URL</label><input type="url" class="form-control" value="/privacy" /></div>
+          <div class="col-md-6"><label>Terms of Service URL</label><input type="url" class="form-control" value="/terms" /></div>
+          <div class="col-12"><div style="font-size:12px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin:8px 0;">Social Media</div></div>
+          <div class="col-md-6"><label>Twitter / X</label><input type="url" class="form-control" placeholder="https://twitter.com/yourcompany" /></div>
+          <div class="col-md-6"><label>LinkedIn</label><input type="url" class="form-control" placeholder="https://linkedin.com/company/yourcompany" /></div>
+          <div class="col-md-6"><label>Instagram</label><input type="url" class="form-control" placeholder="https://instagram.com/yourcompany" /></div>
+          <div class="col-md-6"><label>Facebook</label><input type="url" class="form-control" placeholder="https://facebook.com/yourcompany" /></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== MEDIA LIBRARY ======================== -->
+  <div class="admin-panel" id="panel-media">
+    <div class="card-section mb-3">
+      <div class="card-section-header">
+        <div class="card-section-title">Media Library</div>
+        <div class="d-flex gap-2">
+          <select class="form-select form-select-sm" style="width:auto;border-radius:8px;"><option>All Files</option><option>Images</option><option>PDFs</option><option>Videos</option></select>
+          <label class="btn-teal" style="cursor:pointer;margin:0;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="me-1"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+            Upload File
+            <input type="file" multiple style="display:none;" accept="image/*,application/pdf,video/*" onchange="handleUpload(this)" />
+          </label>
+        </div>
+      </div>
+      <div class="card-section-body">
+        <div id="mediaGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;"></div>
+        <p id="mediaEmpty" class="text-muted text-center py-4" style="display:none;">No files uploaded yet. Click "Upload File" to get started.</p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // ---- Sidebar navigation ----
+  document.querySelectorAll(".nav-link-admin[data-panel]").forEach(link => {
+    link.addEventListener("click", e => {
+      e.preventDefault();
+      const panelId = link.dataset.panel;
+      showPanel(panelId);
+
+      // Update active link
+      document.querySelectorAll(".nav-link-admin").forEach(l => l.classList.remove("active"));
+      link.classList.add("active");
+
+      // Update topbar title
+      document.getElementById("topbarTitle").textContent = link.textContent.trim();
+    });
+  });
+
+  function showPanel(id) {
+    document.querySelectorAll(".admin-panel").forEach(p => p.classList.remove("active"));
+    const panel = document.getElementById("panel-" + id);
+    if (panel) panel.classList.add("active");
+  }
+
+  // ---- Tab switching within panels ----
+  function switchTab(el, tabId) {
+    const parent = el.closest(".card-section-body");
+    parent.querySelectorAll(".admin-tab").forEach(t => t.classList.remove("active"));
+    el.classList.add("active");
+    parent.querySelectorAll(".tab-pane").forEach(p => p.style.display = "none");
+    const pane = document.getElementById(tabId);
+    if (pane) pane.style.display = "block";
+  }
+
+  // ---- Mobile sidebar toggle ----
+  document.getElementById("mobileToggle").addEventListener("click", () => {
+    document.getElementById("sidebar").classList.toggle("open");
+  });
+
+  // ---- Save toast ----
+  function saveToast() {
+    const toast = document.createElement("div");
+    toast.style.cssText = "position:fixed;bottom:24px;right:24px;background:#065f46;color:#fff;padding:12px 20px;border-radius:10px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,0.2);";
+    toast.textContent = "✓ Changes saved successfully";
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  }
+
+  // ============================================================
+  // FEATURES MANAGEMENT
+  // ============================================================
+  const featuresData = [
+    { id:1, icon:"home",            title:"Centralized Property Dashboard",  active:true },
+    { id:2, icon:"calendar-days",   title:"Smart Booking Calendar",          active:true },
+    { id:3, icon:"message-circle",  title:"Automated Guest Communication",   active:true },
+    { id:4, icon:"users",           title:"Guest Profiles & History",        active:true },
+    { id:5, icon:"clipboard-check", title:"Cleaning Task Management",        active:true },
+    { id:6, icon:"wrench",          title:"Maintenance Tracking",            active:true },
+    { id:7, icon:"credit-card",     title:"Payment Tracking",                active:true },
+    { id:8, icon:"bar-chart-3",     title:"Owner Reporting",                 active:true },
+    { id:9, icon:"shield-check",    title:"Staff Roles & Permissions",       active:true },
+    { id:10,icon:"key-round",       title:"Digital Check-In",                active:true },
+    { id:11,icon:"file-text",       title:"Document Uploads",                active:true },
+    { id:12,icon:"smartphone",      title:"Mobile-Friendly Admin Panel",     active:true },
+  ];
+
+  function renderFeatures() {
+    const tbody = document.getElementById("featuresTbody");
+    if (!tbody) return;
+    tbody.innerHTML = featuresData.map(f => `
+      <tr>
+        <td style="color:#d1d5db;cursor:grab;">⠿</td>
+        <td><code style="font-size:12px;background:#f3f4f6;padding:2px 7px;border-radius:5px;">${f.icon}</code></td>
+        <td style="font-weight:500;">${f.title}</td>
+        <td><span class="badge-status ${f.active ? 'badge-active' : 'badge-expired'}">${f.active ? 'Active' : 'Hidden'}</span></td>
+        <td>
+          <button class="btn-sm-outline me-1" onclick="editFeature(${f.id})">Edit</button>
+          <button class="btn-danger-sm" onclick="toggleFeature(${f.id})">${f.active ? 'Hide' : 'Show'}</button>
+        </td>
+      </tr>`).join("");
+  }
+
+  function showFeatureForm(id) {
+    document.getElementById("featureFormTitle").textContent = id ? "Edit Feature" : "Add Feature";
+    if (!id) { document.getElementById("fIcon").value=""; document.getElementById("fTitle").value=""; document.getElementById("fDesc").value=""; }
+  }
+  function resetFeatureForm() { showFeatureForm(); }
+  function editFeature(id) {
+    const f = featuresData.find(x => x.id===id);
+    if (!f) return;
+    document.getElementById("fIcon").value  = f.icon;
+    document.getElementById("fTitle").value = f.title;
+    document.getElementById("featureFormTitle").textContent = "Edit Feature";
+  }
+  function toggleFeature(id) {
+    const f = featuresData.find(x => x.id===id);
+    if (f) { f.active = !f.active; renderFeatures(); saveToast(); }
+  }
+  function saveFeature() {
+    const title = document.getElementById("fTitle").value.trim();
+    const icon  = document.getElementById("fIcon").value.trim();
+    if (!title) { alert("Please enter a feature title."); return; }
+    featuresData.push({ id: Date.now(), icon: icon||"star", title, active: document.getElementById("fActive").checked });
+    renderFeatures();
+    resetFeatureForm();
+    saveToast();
+  }
+  renderFeatures();
+
+  // ============================================================
+  // TESTIMONIALS MANAGEMENT
+  // ============================================================
+  const testimonialsData = [
+    { id:1, name:"Maria Rodriguez", role:"10-Unit Villa Manager, Aruba",              stars:5, active:true },
+    { id:2, name:"James Thompson",  role:"Airbnb Superhost, 6 Properties",            stars:5, active:true },
+    { id:3, name:"Sofia Chen",      role:"Property Management Company, 28 Units",     stars:5, active:true },
+    { id:4, name:"Ahmed Khalil",    role:"Boutique Hotel Owner, 18 Rooms",            stars:5, active:true },
+    { id:5, name:"Laura Perez",     role:"STR Operator, Caribbean, 15 Units",         stars:5, active:true },
+    { id:6, name:"David Martinez",  role:"Vacation Rental Company, 22 Properties",    stars:5, active:true },
+  ];
+
+  function renderTestimonials() {
+    const tbody = document.getElementById("testimonialsTbody");
+    if (!tbody) return;
+    tbody.innerHTML = testimonialsData.map(t => `
+      <tr>
+        <td><strong>${t.name}</strong></td>
+        <td style="font-size:13px;color:#6b7280;">${t.role}</td>
+        <td>${"★".repeat(t.stars)}</td>
+        <td><span class="badge-status ${t.active ? 'badge-active' : 'badge-expired'}">${t.active ? 'Active' : 'Hidden'}</span></td>
+        <td>
+          <button class="btn-sm-outline me-1" onclick="editTestimonial(${t.id})">Edit</button>
+          <button class="btn-danger-sm" onclick="deleteTestimonial(${t.id})">Delete</button>
+        </td>
+      </tr>`).join("");
+  }
+
+  function showTestimonialForm() { document.getElementById("testimFormTitle").textContent="Add Testimonial"; }
+  function resetTestimonialForm() { showTestimonialForm(); ["tName","tRole","tText"].forEach(id => document.getElementById(id).value=""); }
+  function editTestimonial(id) {
+    const t = testimonialsData.find(x=>x.id===id);
+    if (!t) return;
+    document.getElementById("tName").value  = t.name;
+    document.getElementById("tRole").value  = t.role;
+    document.getElementById("testimFormTitle").textContent = "Edit Testimonial";
+  }
+  function deleteTestimonial(id) {
+    if (!confirm("Delete this testimonial?")) return;
+    const i = testimonialsData.findIndex(x=>x.id===id);
+    if (i>-1) { testimonialsData.splice(i,1); renderTestimonials(); saveToast(); }
+  }
+  function saveTestimonial() {
+    const name = document.getElementById("tName").value.trim();
+    if (!name) { alert("Please enter a name."); return; }
+    testimonialsData.push({ id:Date.now(), name, role:document.getElementById("tRole").value, stars:parseInt(document.getElementById("tStars").value), active:document.getElementById("tActive").checked });
+    renderTestimonials(); resetTestimonialForm(); saveToast();
+  }
+  renderTestimonials();
+
+  // ============================================================
+  // FAQ MANAGEMENT
+  // ============================================================
+  const faqData = [
+    { id:1, q:"Is StayMaster Pro only for Airbnb hosts?",   active:true },
+    { id:2, q:"Can I manage multiple properties?",           active:true },
+    { id:3, q:"Can my staff use the system?",                active:true },
+    { id:4, q:"Can property owners receive reports?",        active:true },
+    { id:5, q:"Is setup included in the subscription?",      active:true },
+    { id:6, q:"Can this integrate with my existing website?",active:true },
+    { id:7, q:"Can I customize the message templates?",      active:true },
+    { id:8, q:"What kind of support do you offer?",          active:true },
+  ];
+
+  function renderFaq() {
+    const list = document.getElementById("faqList");
+    if (!list) return;
+    list.innerHTML = faqData.map((f,i) => `
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f3f4f6;">
+        <span style="color:#d1d5db;cursor:grab;font-size:16px;">⠿</span>
+        <span style="flex:1;font-size:14px;font-weight:500;color:#111827;">${i+1}. ${f.q}</span>
+        <span class="badge-status ${f.active ? 'badge-active' : 'badge-expired'}" style="font-size:11px;">${f.active ? 'Active' : 'Hidden'}</span>
+        <button class="btn-sm-outline" style="font-size:11px;padding:3px 10px;" onclick="editFaq(${f.id})">Edit</button>
+        <button class="btn-danger-sm" style="font-size:11px;" onclick="deleteFaq(${f.id})">Del</button>
+      </div>`).join("");
+  }
+
+  function showFaqForm() { document.getElementById("faqFormTitle").textContent="Add FAQ"; }
+  function resetFaqForm() { showFaqForm(); document.getElementById("faqQ").value=""; document.getElementById("faqA").value=""; }
+  function editFaq(id) {
+    const f = faqData.find(x=>x.id===id);
+    if (!f) return;
+    document.getElementById("faqQ").value = f.q;
+    document.getElementById("faqFormTitle").textContent = "Edit FAQ";
+  }
+  function deleteFaq(id) {
+    if (!confirm("Delete this FAQ item?")) return;
+    const i = faqData.findIndex(x=>x.id===id);
+    if (i>-1) { faqData.splice(i,1); renderFaq(); saveToast(); }
+  }
+  function saveFaq() {
+    const q = document.getElementById("faqQ").value.trim();
+    const a = document.getElementById("faqA").value.trim();
+    if (!q||!a) { alert("Both question and answer are required."); return; }
+    faqData.push({ id:Date.now(), q, a, active:document.getElementById("faqActive").checked });
+    renderFaq(); resetFaqForm(); saveToast();
+  }
+  renderFaq();
+
+  // ============================================================
+  // MEDIA LIBRARY
+  // ============================================================
+  const mediaFiles = [];
+
+  function renderMedia() {
+    const grid  = document.getElementById("mediaGrid");
+    const empty = document.getElementById("mediaEmpty");
+    if (!grid) return;
+    if (mediaFiles.length === 0) { grid.innerHTML=""; if(empty) empty.style.display="block"; return; }
+    if (empty) empty.style.display="none";
+    grid.innerHTML = mediaFiles.map(f => `
+      <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;cursor:pointer;" title="${f.name}">
+        ${f.preview ? `<img src="${f.preview}" style="width:100%;height:100px;object-fit:cover;" />` : `<div style="width:100%;height:100px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:28px;">${f.type.includes('pdf') ? '📄' : '🎬'}</div>`}
+        <div style="padding:8px;"><div style="font-size:12px;font-weight:600;color:#111827;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${f.name}</div><div style="font-size:11px;color:#9ca3af;">${f.size}</div></div>
+      </div>`).join("");
+  }
+
+  function handleUpload(input) {
+    Array.from(input.files).forEach(file => {
+      const entry = {
+        name: file.name,
+        size: (file.size/1024).toFixed(1)+"KB",
+        type: file.type,
+        preview: null,
+      };
+      if (file.type.startsWith("image/")) {
+        const reader = new FileReader();
+        reader.onload = e => { entry.preview = e.target.result; renderMedia(); };
+        reader.readAsDataURL(file);
+      }
+      mediaFiles.push(entry);
+    });
+    renderMedia();
+    saveToast();
+  }
+  renderMedia();
+
+  // ---- Populate chat history ----
+  const chats = [
+    { name: "Guest – Apt 3B", msg: "Can I check in early?", time: "10 min ago", status: "Resolved" },
+    { name: "Guest – Villa Rosa", msg: "Is there parking nearby?", time: "32 min ago", status: "Resolved" },
+    { name: "Guest – Unit 7", msg: "How do I get the WiFi password?", time: "1h ago", status: "Resolved" },
+    { name: "Guest – Beachfront 2", msg: "Can we bring a pet?", time: "2h ago", status: "Escalated" },
+    { name: "Staff – Maria", msg: "Which unit needs cleaning today?", time: "3h ago", status: "Resolved" },
+  ];
+  const cl = document.getElementById("chatList");
+  if (cl) {
+    chats.forEach(c => {
+      cl.innerHTML += `<div class="chat-row">
+        <div class="chat-av">${c.name[6]}</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;color:#111827;">${c.name}</div>
+          <div style="font-size:13px;color:#6b7280;">${c.msg}</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:11px;color:#9ca3af;">${c.time}</div>
+          <span class="badge-status ${c.status==='Resolved'?'badge-resolved':'badge-open'}" style="font-size:11px;">${c.status}</span>
+        </div>
+      </div>`;
+    });
+  }
+</script>
+</body>
+</html>
