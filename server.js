@@ -24,6 +24,7 @@ const cmsRoutes      = require("./routes/cms");
 const leadsRoutes    = require("./routes/leads");
 const adminRoutes    = require("./routes/admin");
 const bookingRoutes  = require("./routes/bookings");
+const runMigrations  = require("./db/migrate");
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -185,10 +186,17 @@ app.use((err, req, res, _next) => {
 // START
 // ============================================================
 
-app.listen(PORT, () => {
-  console.log(`✅  StayMaster Pro server running on http://localhost:${PORT}`);
-  console.log(`   Environment : ${process.env.NODE_ENV || "development"}`);
-  console.log(`   Admin panel : http://localhost:${PORT}/secure-admin/login`);
-});
+runMigrations()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`✅  StayMaster Pro server running on http://localhost:${PORT}`);
+      console.log(`   Environment : ${process.env.NODE_ENV || "development"}`);
+      console.log(`   Admin panel : http://localhost:${PORT}/secure-admin/login`);
+    });
+  })
+  .catch(err => {
+    console.error("Migration failed — server not started:", err.message);
+    process.exit(1);
+  });
 
 module.exports = app;
