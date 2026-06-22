@@ -240,6 +240,28 @@ CREATE TABLE IF NOT EXISTS demo_requests (
   created_at     TIMESTAMPTZ DEFAULT NOW()
 );
 
+CREATE TABLE IF NOT EXISTS demo_bookings (
+  id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  full_name       VARCHAR(120) NOT NULL,
+  email           VARCHAR(255) NOT NULL,
+  phone           VARCHAR(40),
+  company         VARCHAR(120),
+  num_properties  VARCHAR(30),
+  booked_date     DATE NOT NULL,
+  booked_slot     VARCHAR(10) NOT NULL,  -- e.g. "10:00"
+  timezone        VARCHAR(60) DEFAULT 'America/New_York',
+  status          VARCHAR(30) DEFAULT 'confirmed',  -- confirmed, cancelled, completed, no_show
+  notes           TEXT,
+  confirmation_no VARCHAR(20) UNIQUE,
+  ip_address      INET,
+  created_at      TIMESTAMPTZ DEFAULT NOW(),
+  updated_at      TIMESTAMPTZ
+);
+
+CREATE INDEX IF NOT EXISTS idx_demo_bookings_date   ON demo_bookings(booked_date);
+CREATE INDEX IF NOT EXISTS idx_demo_bookings_email  ON demo_bookings(email);
+CREATE INDEX IF NOT EXISTS idx_demo_bookings_status ON demo_bookings(status);
+
 CREATE TABLE IF NOT EXISTS trial_requests (
   id          UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name        VARCHAR(120),

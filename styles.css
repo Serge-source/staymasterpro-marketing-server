@@ -2360,3 +2360,88 @@ html.dark-mode .quiz-option:hover { border-color: var(--color-secondary); }
 html.dark-mode .demo-booking-tabs { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.1); }
 html.dark-mode .demo-tab { color: #94a3b8; }
 html.dark-mode .demo-tab.active { color: var(--color-secondary); }
+
+/* ============================================================
+   NATIVE BOOKING CALENDAR
+============================================================ */
+.booking-cal-wrap { min-height: 320px; }
+.booking-step { padding: 20px 24px 8px; }
+.booking-step-header {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 16px; padding-bottom: 12px;
+  border-bottom: 1px solid #f1f5f9;
+}
+.booking-cal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.cal-month-label { font-weight: 700; font-size: 1rem; color: var(--color-primary); }
+.cal-nav-btn {
+  background: none; border: 1px solid #e2e8f0; border-radius: 8px;
+  width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--color-primary); transition: all .2s;
+}
+.cal-nav-btn:hover:not(:disabled) { background: var(--color-secondary); color: #fff; border-color: var(--color-secondary); }
+.cal-nav-btn:disabled { opacity: .35; cursor: not-allowed; }
+.cal-day-names {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  text-align: center; margin-bottom: 6px;
+}
+.cal-day-names span { font-size: .72rem; font-weight: 700; color: var(--color-muted); padding: 4px 0; }
+.cal-grid {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px;
+  min-height: 160px;
+}
+.cal-loading { grid-column: 1/-1; display: flex; justify-content: center; align-items: center; padding: 40px; }
+.cal-cell {
+  aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  border-radius: 8px; font-size: .85rem; font-weight: 500;
+}
+.cal-cell.empty { background: transparent; }
+.cal-cell--disabled { color: #cbd5e1; cursor: not-allowed; }
+.cal-cell--available {
+  background: rgba(0,166,166,.08); color: var(--color-secondary);
+  font-weight: 700; cursor: pointer; border: 1px solid rgba(0,166,166,.2);
+  transition: all .15s;
+}
+.cal-cell--available:hover { background: var(--color-secondary); color: #fff; border-color: var(--color-secondary); }
+.cal-cell--selected { background: var(--color-secondary) !important; color: #fff !important; border-color: var(--color-secondary) !important; }
+.cal-tz-note { font-size: .72rem; }
+
+/* Slot grid */
+.slot-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+  max-height: 260px; overflow-y: auto; padding-right: 4px;
+}
+.slot-btn {
+  background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px;
+  padding: 10px 4px; font-size: .8rem; font-weight: 600; text-align: center;
+  cursor: pointer; color: var(--color-primary); transition: all .15s;
+}
+.slot-btn:hover:not([disabled]) { background: rgba(0,166,166,.08); border-color: var(--color-secondary); color: var(--color-secondary); }
+.slot-btn--selected { background: var(--color-secondary) !important; color: #fff !important; border-color: var(--color-secondary) !important; }
+.slot-btn--taken { color: #cbd5e1; cursor: not-allowed; text-decoration: line-through; }
+
+/* Confirmation box */
+.booking-confirm-box {
+  background: #f8fafc; border-radius: 10px; padding: 16px 20px;
+  border: 1px solid #e2e8f0; text-align: left; display: inline-block; width: 100%;
+}
+.confirm-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 6px 0; border-bottom: 1px solid #f1f5f9; font-size: .875rem;
+}
+.confirm-row:last-child { border-bottom: none; }
+.confirm-row span { color: var(--color-muted); }
+.booking-success-icon { display: flex; justify-content: center; }
+
+/* Cal spinner animation */
+@keyframes spin { to { transform: rotate(360deg); } }
+.cal-spinner { animation: spin 1s linear infinite; }
+
+/* Dark mode */
+html.dark-mode .cal-cell--available { background: rgba(0,166,166,.15); border-color: rgba(0,166,166,.3); }
+html.dark-mode .cal-cell--disabled { color: rgba(255,255,255,.2); }
+html.dark-mode .slot-btn { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.12); color: #e2e8f0; }
+html.dark-mode .booking-confirm-box { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.1); }
+html.dark-mode .cal-nav-btn { border-color: rgba(255,255,255,.15); color: #e2e8f0; }

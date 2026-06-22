@@ -211,6 +211,15 @@ function openDemoModal() {
   }
 }
 
+// ---- Demo Booking Modal + Native Calendar ----
+const calState = {
+  year: null, month: null,        // currently displayed month
+  availability: {},               // { "2026-06-25": [{slot, available},...] }
+  selectedDate: null,
+  selectedSlot: null,
+  loading: false,
+};
+
 function initDemoModal() {
   // Tab switcher
   document.querySelectorAll(".demo-tab").forEach(tab => {
@@ -223,11 +232,98 @@ function initDemoModal() {
     });
   });
 
-  // Demo request form
+  // Month nav
+  document.getElementById("calPrevMonth")?.addEventListener("click", () => {
+    let { year, month } = calState;
+    month--;
+    if (month < 0) { month = 11; year--; }
+    calState.year = year; calState.month = month;
+    loadCalendarMonth(year, month);
+  });
+  document.getElementById("calNextMonth")?.addEventListener("click", () => {
+    let { year, month } = calState;
+    month++;
+    if (month > 11) { month = 0; year++; }
+    calState.year = year; calState.month = month;
+    loadCalendarMonth(year, month);
+  });
+
+  // Back buttons
+  document.getElementById("calBackToDate")?.addEventListener("click", () => showBookingStep("date"));
+  document.getElementById("calBackToSlot")?.addEventListener("click", () => showBookingStep("slot"));
+
+  // Timezone label
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const tzEl = document.getElementById("calTzLabel");
+    if (tzEl && tz) tzEl.textContent = tz.replace("_", " ");
+  } catch(_) {}
+
+  // Booking confirm form
+  const confirmForm = document.getElementById("bookingConfirmForm");
+  if (confirmForm) {
+    confirmForm.querySelectorAll("[required]").forEach(field => {
+      field.addEventListener("blur",  () => validateField(field));
+      field.addEventListener("input", () => { if (field.classList.contains("is-invalid")) validateField(field); });
+    });
+    confirmForm.addEventListener("submit", async e => {
+      e.preventDefault();
+      if (!validateForm(confirmForm)) return;
+      const btn = document.getElementById("confirmBookingBtn");
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Confirming…';
+
+      const fd = new FormData(confirmForm);
+      const payload = {
+        fullName:      fd.get("fullName"),
+        email:         fd.get("email"),
+        phone:         fd.get("phone"),
+        company:       fd.get("company"),
+        numProperties: fd.get("numProperties"),
+        date:          calState.selectedDate,
+        slot:          calState.selectedSlot,
+        timezone:      Intl.DateTimeFormat().resolvedOptions().timeZone || "America/New_York",
+      };
+
+      try {
+        const res  = await fetch("/api/bookings", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (data.success) {
+          showBookingStep("success");
+          document.getElementById("confirmDateDisplay").textContent = formatDate(data.date);
+          document.getElementById("confirmTimeDisplay").textContent = formatSlot(data.slot);
+          document.getElementById("confirmRefDisplay").textContent  = data.confirmation;
+          lucide.createIcons();
+          // Remove slot from availability so it shows as taken
+          if (calState.availability[data.date]) {
+            calState.availability[data.date] = calState.availability[data.date]
+              .map(s => s.slot === data.slot ? { ...s, available: false } : s);
+          }
+        } else {
+          showToast(data.message || "Booking failed. Please try another slot.");
+          btn.disabled = false;
+          btn.innerHTML = '<i data-lucide="calendar-check" class="btn-icon me-2" style="width:18px;height:18px;"></i>Confirm Booking';
+          lucide.createIcons();
+          if (res.status === 409) showBookingStep("slot"); // slot taken — go back
+        }
+      } catch (_) {
+        showToast("Network error. Please try again.");
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="calendar-check" class="btn-icon me-2" style="width:18px;height:18px;"></i>Confirm Booking';
+        lucide.createIcons();
+      }
+    });
+  }
+
+  // Demo request form (second tab)
   const demoReqForm = document.getElementById("demoRequestForm");
   if (demoReqForm) {
     demoReqForm.querySelectorAll("[required]").forEach(field => {
-      field.addEventListener("blur", () => validateField(field));
+      field.addEventListener("blur",  () => validateField(field));
       field.addEventListener("input", () => { if (field.classList.contains("is-invalid")) validateField(field); });
     });
     demoReqForm.addEventListener("submit", e => {
@@ -238,6 +334,143 @@ function initDemoModal() {
       bootstrap.Modal.getInstance(document.getElementById("bookDemoModal"))?.hide();
     });
   }
+}
+
+function openDemoModal() {
+  const modal = new bootstrap.Modal(document.getElementById("bookDemoModal"));
+  modal.show();
+  // Reset to step 1
+  showBookingStep("date");
+  // Load current month if not loaded
+  const now = new Date();
+  if (calState.year === null) {
+    calState.year  = now.getFullYear();
+    calState.month = now.getMonth();
+  }
+  loadCalendarMonth(calState.year, calState.month);
+}
+
+function showBookingStep(step) {
+  const steps = { date: "bookingStepDate", slot: "bookingStepSlot", form: "bookingStepForm", success: "bookingStepSuccess" };
+  Object.entries(steps).forEach(([k, id]) => {
+    document.getElementById(id)?.classList.toggle("d-none", k !== step);
+  });
+  lucide.createIcons();
+}
+
+async function loadCalendarMonth(year, month) {
+  const monthStr = `${year}-${String(month + 1).padStart(2, "0")}`;
+  const label = document.getElementById("calMonthLabel");
+  if (label) label.textContent = new Date(year, month, 1).toLocaleDateString("en-US", { month: "long", year: "numeric" });
+
+  // Prev month button: disable if current month
+  const now = new Date();
+  const prevBtn = document.getElementById("calPrevMonth");
+  if (prevBtn) prevBtn.disabled = (year === now.getFullYear() && month <= now.getMonth());
+
+  const grid = document.getElementById("calGrid");
+  if (!grid) return;
+  grid.innerHTML = '<div class="cal-loading"><span class="spinner-border spinner-border-sm text-secondary"></span></div>';
+
+  try {
+    const res  = await fetch(`/api/bookings/availability?month=${monthStr}`);
+    const data = await res.json();
+    if (data.success) {
+      Object.assign(calState.availability, data.availability);
+      renderCalendarGrid(year, month, data.availability);
+    }
+  } catch (_) {
+    grid.innerHTML = '<p class="text-muted small text-center p-3">Could not load availability. Please try again.</p>';
+  }
+}
+
+function renderCalendarGrid(year, month, availability) {
+  const grid = document.getElementById("calGrid");
+  if (!grid) return;
+
+  const firstDay  = new Date(year, month, 1).getDay(); // 0=Sun
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  let html = "";
+  // Empty cells before first day
+  for (let i = 0; i < firstDay; i++) html += '<div class="cal-cell empty"></div>';
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${year}-${String(month+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+    const date    = new Date(year, month, d);
+    const isPast  = date < today;
+    const hasSlots = availability[dateStr] && availability[dateStr].some(s => s.available);
+
+    let cls = "cal-cell";
+    if (isPast || !hasSlots) cls += " cal-cell--disabled";
+    else cls += " cal-cell--available";
+    if (dateStr === calState.selectedDate) cls += " cal-cell--selected";
+
+    html += `<div class="${cls}" data-date="${dateStr}">${d}</div>`;
+  }
+
+  grid.innerHTML = html;
+
+  grid.querySelectorAll(".cal-cell--available").forEach(cell => {
+    cell.addEventListener("click", () => {
+      calState.selectedDate = cell.dataset.date;
+      grid.querySelectorAll(".cal-cell--selected").forEach(c => c.classList.remove("cal-cell--selected"));
+      cell.classList.add("cal-cell--selected");
+      renderSlots(calState.selectedDate);
+      showBookingStep("slot");
+      lucide.createIcons();
+    });
+  });
+}
+
+function renderSlots(dateStr) {
+  const slots = calState.availability[dateStr] || [];
+  const label = document.getElementById("selectedDateLabel");
+  if (label) label.textContent = formatDate(dateStr);
+
+  const grid = document.getElementById("slotGrid");
+  if (!grid) return;
+
+  grid.innerHTML = slots.map(({ slot, available }) => {
+    const cls = available ? "slot-btn" : "slot-btn slot-btn--taken";
+    return `<button class="${cls}" data-slot="${slot}" ${!available ? "disabled" : ""}>${formatSlot(slot)}</button>`;
+  }).join("");
+
+  grid.querySelectorAll(".slot-btn:not([disabled])").forEach(btn => {
+    btn.addEventListener("click", () => {
+      calState.selectedSlot = btn.dataset.slot;
+      grid.querySelectorAll(".slot-btn--selected").forEach(b => b.classList.remove("slot-btn--selected"));
+      btn.classList.add("slot-btn--selected");
+      const slotLabel = document.getElementById("selectedSlotLabel");
+      if (slotLabel) slotLabel.textContent = `${formatDate(calState.selectedDate)} · ${formatSlot(calState.selectedSlot)}`;
+      // Reset confirm form
+      const form = document.getElementById("bookingConfirmForm");
+      if (form) {
+        form.reset();
+        form.querySelectorAll(".is-invalid").forEach(f => f.classList.remove("is-invalid"));
+        form.querySelectorAll(".field-error.visible").forEach(f => f.classList.remove("visible"));
+        const btn2 = document.getElementById("confirmBookingBtn");
+        if (btn2) { btn2.disabled = false; btn2.innerHTML = '<i data-lucide="calendar-check" class="btn-icon me-2" style="width:18px;height:18px;"></i>Confirm Booking'; }
+      }
+      showBookingStep("form");
+      lucide.createIcons();
+    });
+  });
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return "";
+  const [y, m, d] = dateStr.split("-").map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
+}
+
+function formatSlot(slot) {
+  if (!slot) return "";
+  const [h, m] = slot.split(":").map(Number);
+  const end = new Date(2000, 0, 1, h, m + 30);
+  const fmt = t => t.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
+  return `${fmt(new Date(2000,0,1,h,m))} – ${fmt(end)}`;
 }
 
 // ---- Plan Recommendations Quiz ----

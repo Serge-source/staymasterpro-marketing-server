@@ -19,10 +19,11 @@ const path       = require("path");
 const logger     = require("./middleware/logger");
 
 // Route handlers
-const authRoutes    = require("./routes/auth");
-const cmsRoutes     = require("./routes/cms");
-const leadsRoutes   = require("./routes/leads");
-const adminRoutes   = require("./routes/admin");
+const authRoutes     = require("./routes/auth");
+const cmsRoutes      = require("./routes/cms");
+const leadsRoutes    = require("./routes/leads");
+const adminRoutes    = require("./routes/admin");
+const bookingRoutes  = require("./routes/bookings");
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -135,10 +136,11 @@ app.use("/admin",        requireAdminSession, express.static(path.join(publicDir
 // API ROUTES
 // ============================================================
 
-app.use("/api/admin",  authRoutes);   // login, logout, 2FA
-app.use("/api/cms",    cmsRoutes);    // branding, pricing, features, FAQ, SEO
-app.use("/api/leads",  leadsRoutes);  // contact form, demo requests, trial signups
-app.use("/api/secure", adminRoutes);  // customers, billing, chatbot, audit logs
+app.use("/api/admin",    authRoutes);    // login, logout, 2FA
+app.use("/api/cms",      cmsRoutes);    // branding, pricing, features, FAQ, SEO
+app.use("/api/leads",    leadsRoutes);  // contact form, demo requests, trial signups
+app.use("/api/secure",   adminRoutes);  // customers, billing, chatbot, audit logs
+app.use("/api/bookings", bookingRoutes); // demo booking calendar
 
 // ============================================================
 // HEALTH CHECK
