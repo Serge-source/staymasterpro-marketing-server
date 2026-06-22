@@ -566,7 +566,6 @@ function initABTest() {
 
   const chosen = variants[variantIndex];
   el.innerHTML = chosen.html;
-  lucide.createIcons();
 
   // Dev badge (remove in production)
   const badge = document.createElement("div");
