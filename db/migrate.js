@@ -7,6 +7,8 @@ const migrations = [
   {
     name: "create_demo_bookings",
     sql: `
+      CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
       CREATE TABLE IF NOT EXISTS demo_bookings (
         id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
         full_name       VARCHAR(120) NOT NULL,
