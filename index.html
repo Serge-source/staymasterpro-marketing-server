@@ -1101,7 +1101,9 @@
           <input type="email" name="email" class="form-control lead-input" style="max-width:240px;" placeholder="Work Email" required autocomplete="email" />
           <span class="field-error">Please enter a valid email</span>
         </div>
-        <button type="submit" class="btn btn-primary px-4">Get Recommendation</button>
+        <button type="button" id="openQuizBtn" class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#quizModal">
+          <i data-lucide="sparkles" class="btn-icon me-2" style="width:16px;height:16px;"></i>Get Recommendations
+        </button>
       </form>
     </div>
   </div>
@@ -1839,6 +1841,304 @@
             </div>
           </div>
         </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     FREE TRIAL MODAL — Multi-step signup
+============================================================ -->
+<div class="modal fade" id="trialModal" tabindex="-1" aria-labelledby="trialModalLabel">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header border-0 pb-0">
+        <div class="d-flex align-items-center gap-2">
+          <div class="trial-modal-logo"></div>
+          <span class="fw-bold text-primary fs-5">StayMaster Pro</span>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body px-4 pb-4">
+
+        <!-- Step indicator -->
+        <div class="trial-steps d-flex gap-2 mb-4 mt-2">
+          <div class="trial-step active" data-step="1"><span>1</span> Account</div>
+          <div class="trial-step-divider"></div>
+          <div class="trial-step" data-step="2"><span>2</span> Your Plan</div>
+          <div class="trial-step-divider"></div>
+          <div class="trial-step" data-step="3"><span>3</span> All Set!</div>
+        </div>
+
+        <!-- Step 1: Account details -->
+        <div id="trialStep1" class="trial-step-panel">
+          <h4 class="fw-bold mb-1">Create your free account</h4>
+          <p class="text-muted small mb-4">14-day free trial · No credit card required · Cancel anytime</p>
+          <form id="trialStep1Form" novalidate>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">First Name *</label>
+                <input type="text" name="first_name" class="form-control form-control-lg" placeholder="John" required autocomplete="given-name" />
+                <span class="field-error">Please enter your first name</span>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Last Name *</label>
+                <input type="text" name="last_name" class="form-control form-control-lg" placeholder="Smith" required autocomplete="family-name" />
+                <span class="field-error">Please enter your last name</span>
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold">Work Email *</label>
+                <input type="email" name="email" class="form-control form-control-lg" placeholder="you@company.com" required autocomplete="email" />
+                <span class="field-error">Please enter a valid email</span>
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold">Password *</label>
+                <div class="position-relative">
+                  <input type="password" name="password" id="trialPassword" class="form-control form-control-lg pe-5" placeholder="Min. 8 characters" required autocomplete="new-password" />
+                  <button type="button" id="toggleTrialPwd" class="btn btn-link position-absolute end-0 top-50 translate-middle-y pe-3 text-muted" tabindex="-1">
+                    <i data-lucide="eye" style="width:18px;height:18px;"></i>
+                  </button>
+                </div>
+                <span class="field-error">Password must be at least 8 characters</span>
+                <div class="password-strength mt-2" id="pwdStrength">
+                  <div class="pwd-bar"><div class="pwd-fill" id="pwdFill"></div></div>
+                  <span class="pwd-label" id="pwdLabel"></span>
+                </div>
+              </div>
+              <div class="col-12">
+                <button type="submit" class="btn btn-accent btn-lg w-100">
+                  Continue <i data-lucide="arrow-right" class="btn-icon ms-2" style="width:18px;height:18px;"></i>
+                </button>
+              </div>
+              <div class="col-12 text-center">
+                <small class="text-muted">Already have an account? <a href="#" id="trialLoginLink" class="text-primary fw-semibold">Sign in</a></small>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Step 2: Plan selection -->
+        <div id="trialStep2" class="trial-step-panel d-none">
+          <h4 class="fw-bold mb-1">Choose your plan</h4>
+          <p class="text-muted small mb-4">All plans include a 14-day free trial. Upgrade or downgrade anytime.</p>
+          <div class="row g-3" id="trialPlanCards">
+            <div class="col-md-4">
+              <div class="trial-plan-card" data-plan="starter">
+                <div class="trial-plan-name">Starter</div>
+                <div class="trial-plan-price">$49<span>/mo</span></div>
+                <div class="trial-plan-desc">Up to 10 properties</div>
+                <ul class="trial-plan-features">
+                  <li>Channel manager</li>
+                  <li>Automated messaging</li>
+                  <li>Basic reporting</li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="trial-plan-card popular" data-plan="growth">
+                <div class="trial-plan-badge">Most Popular</div>
+                <div class="trial-plan-name">Growth</div>
+                <div class="trial-plan-price">$149<span>/mo</span></div>
+                <div class="trial-plan-desc">Up to 50 properties</div>
+                <ul class="trial-plan-features">
+                  <li>Everything in Starter</li>
+                  <li>Dynamic pricing</li>
+                  <li>Owner portal</li>
+                  <li>Advanced analytics</li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="trial-plan-card" data-plan="professional">
+                <div class="trial-plan-name">Professional</div>
+                <div class="trial-plan-price">$299<span>/mo</span></div>
+                <div class="trial-plan-desc">Unlimited properties</div>
+                <ul class="trial-plan-features">
+                  <li>Everything in Growth</li>
+                  <li>API access</li>
+                  <li>White-label portal</li>
+                  <li>Priority support</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-accent btn-lg w-100 mt-4" id="trialStep2Next" disabled>
+            Start My Free Trial <i data-lucide="rocket" class="btn-icon ms-2" style="width:18px;height:18px;"></i>
+          </button>
+          <p class="text-center text-muted small mt-2">No credit card required</p>
+        </div>
+
+        <!-- Step 3: Success -->
+        <div id="trialStep3" class="trial-step-panel d-none text-center py-3">
+          <div class="trial-success-icon mb-4">
+            <i data-lucide="check-circle" style="width:64px;height:64px;color:var(--color-secondary)"></i>
+          </div>
+          <h3 class="fw-bold mb-2">You're all set! 🎉</h3>
+          <p class="text-muted mb-4">Your 14-day free trial has started. Check your email for login details.</p>
+          <a href="#" id="trialGoToApp" class="btn btn-accent btn-lg px-5">
+            <i data-lucide="layout-dashboard" class="btn-icon me-2" style="width:18px;height:18px;"></i>Go to Dashboard
+          </a>
+          <div class="mt-3">
+            <small class="text-muted">Need help getting started? <a href="#" class="text-primary" data-bs-dismiss="modal" id="trialBookOnboarding">Book a free onboarding call</a></small>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     DEMO BOOKING MODAL — Calendly embed
+============================================================ -->
+<div class="modal fade" id="bookDemoModal" tabindex="-1" aria-labelledby="bookDemoModalLabel">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header border-0">
+        <div>
+          <h5 class="modal-title fw-bold mb-0">Book Your Live Demo</h5>
+          <p class="text-muted small mb-0">Pick a time that works for you — 30-minute personalized session</p>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-0">
+        <div class="demo-booking-wrap">
+          <!-- Tab switcher -->
+          <div class="demo-booking-tabs">
+            <button class="demo-tab active" data-tab="calendly">
+              <i data-lucide="calendar" style="width:16px;height:16px;" class="me-2"></i>Pick a Time
+            </button>
+            <button class="demo-tab" data-tab="form">
+              <i data-lucide="mail" style="width:16px;height:16px;" class="me-2"></i>Request a Call
+            </button>
+          </div>
+
+          <!-- Calendly embed panel -->
+          <div id="demoTabCalendly" class="demo-tab-panel p-4">
+            <div class="calendly-placeholder">
+              <div class="calendly-inner">
+                <i data-lucide="calendar-days" style="width:48px;height:48px;color:var(--color-secondary)" class="mb-3"></i>
+                <h5 class="fw-bold">Schedule via Calendly</h5>
+                <p class="text-muted small mb-4">Set your Calendly URL in <code>script.js</code> → <code>DEMO_CALENDLY_URL</code> to embed your real calendar here.</p>
+                <div id="calendlyEmbed" class="calendly-embed-container"></div>
+                <a href="#" id="calendlyFallbackBtn" class="btn btn-accent px-4" target="_blank" rel="noopener">
+                  <i data-lucide="external-link" class="btn-icon me-2" style="width:16px;height:16px;"></i>Open Calendly
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Request call panel -->
+          <div id="demoTabForm" class="demo-tab-panel p-4 d-none">
+            <p class="text-muted mb-4">Prefer us to call you? Leave your details and we'll reach out within 2 business hours.</p>
+            <form id="demoRequestForm" novalidate>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Full Name *</label>
+                  <input type="text" name="full_name" class="form-control" required autocomplete="name" placeholder="Your name" />
+                  <span class="field-error">Please enter your name</span>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Email *</label>
+                  <input type="email" name="email" class="form-control" required autocomplete="email" placeholder="you@company.com" />
+                  <span class="field-error">Please enter a valid email</span>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Phone</label>
+                  <input type="tel" name="phone" class="form-control" autocomplete="tel" placeholder="+1 (000) 000-0000" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Best Time to Call</label>
+                  <select name="call_time" class="form-select">
+                    <option value="">Any time</option>
+                    <option value="morning">Morning (9am–12pm)</option>
+                    <option value="afternoon">Afternoon (12pm–5pm)</option>
+                    <option value="evening">Evening (5pm–7pm)</option>
+                  </select>
+                </div>
+                <div class="col-12">
+                  <label class="form-label fw-semibold">Number of Properties</label>
+                  <select name="properties" class="form-select">
+                    <option value="">Select range</option>
+                    <option value="1-2">1–2</option>
+                    <option value="3-10">3–10</option>
+                    <option value="11-30">11–30</option>
+                    <option value="30+">30+</option>
+                  </select>
+                </div>
+                <div class="col-12">
+                  <button type="submit" class="btn btn-accent btn-lg w-100">
+                    <i data-lucide="phone" class="btn-icon me-2" style="width:18px;height:18px;"></i>Request a Call
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PLAN RECOMMENDATIONS QUIZ MODAL
+============================================================ -->
+<div class="modal fade" id="quizModal" tabindex="-1" aria-labelledby="quizModalLabel">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold">Find Your Perfect Plan</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body px-4 pb-4">
+
+        <!-- Quiz progress -->
+        <div class="quiz-progress mb-4">
+          <div class="quiz-progress-bar" id="quizProgressBar" style="width:33%"></div>
+        </div>
+
+        <!-- Q1: Property count -->
+        <div id="quizQ1" class="quiz-panel">
+          <h5 class="fw-bold mb-1">How many properties do you manage?</h5>
+          <p class="text-muted small mb-4">We'll recommend the plan that fits your scale.</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-q="1" data-v="1-2">1–2 properties</button>
+            <button class="quiz-option" data-q="1" data-v="3-10">3–10 properties</button>
+            <button class="quiz-option" data-q="1" data-v="11-30">11–30 properties</button>
+            <button class="quiz-option" data-q="1" data-v="30+">30+ properties</button>
+          </div>
+        </div>
+
+        <!-- Q2: Biggest challenge -->
+        <div id="quizQ2" class="quiz-panel d-none">
+          <h5 class="fw-bold mb-1">What's your biggest challenge right now?</h5>
+          <p class="text-muted small mb-4">This helps us tailor our recommendation.</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-q="2" data-v="bookings">Managing bookings across channels</button>
+            <button class="quiz-option" data-q="2" data-v="pricing">Maximizing revenue & pricing</button>
+            <button class="quiz-option" data-q="2" data-v="guests">Guest communication & reviews</button>
+            <button class="quiz-option" data-q="2" data-v="operations">Cleaning, maintenance & operations</button>
+            <button class="quiz-option" data-q="2" data-v="reporting">Owner reporting & financials</button>
+          </div>
+        </div>
+
+        <!-- Q3: Result -->
+        <div id="quizQ3" class="quiz-panel d-none text-center py-2">
+          <div class="quiz-result-icon mb-3">
+            <i data-lucide="star" style="width:48px;height:48px;color:var(--color-accent)"></i>
+          </div>
+          <h5 class="fw-bold mb-1">We recommend:</h5>
+          <div class="quiz-result-plan mb-2" id="quizResultPlan">Growth</div>
+          <div class="quiz-result-price mb-3" id="quizResultPrice">$149/mo</div>
+          <p class="text-muted small mb-4" id="quizResultReason"></p>
+          <a href="#" id="quizStartTrialBtn" class="btn btn-accent btn-lg w-100 mb-2">
+            <i data-lucide="rocket" class="btn-icon me-2" style="width:18px;height:18px;"></i>Start Free Trial — <span id="quizResultPlanInline">Growth</span>
+          </a>
+          <button class="btn btn-outline-secondary w-100" id="quizRestartBtn">
+            <i data-lucide="refresh-cw" class="btn-icon me-2" style="width:16px;height:16px;"></i>Start Over
+          </button>
+        </div>
+
       </div>
     </div>
   </div>

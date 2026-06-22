@@ -3,11 +3,11 @@
 ============================================================ */
 
 // ---- Configurable URLs (edit these to match your deployment) ----
-const APP_TRIAL_URL   = "https://app.yourdomain.com/register";
-const APP_LOGIN_URL   = "https://app.yourdomain.com/login";
-const DEMO_URL        = "https://calendly.com/yourcompany/demo";
-const CHATBOT_URL     = "https://chat.yourdomain.com";
-const CONTACT_EMAIL   = "sales@yourcompany.com";
+const APP_TRIAL_URL       = "https://app.staymasterpro.com/register";
+const APP_LOGIN_URL       = "https://app.staymasterpro.com/login";
+const DEMO_CALENDLY_URL   = "https://calendly.com/staymasterpro/demo"; // ← replace with your Calendly link
+const CHATBOT_URL         = "https://chat.staymasterpro.com";
+const CONTACT_EMAIL       = "sales@staymasterpro.com";
 
 // ---- Initialize on DOM ready ----
 document.addEventListener("DOMContentLoaded", () => {
@@ -22,6 +22,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   wireButtons();
+  initTrialModal();
+  initDemoModal();
+  initQuizModal();
   initNavScroll();
   initSmoothScroll();
   initForms();
@@ -45,32 +48,278 @@ document.addEventListener("DOMContentLoaded", () => {
   initVideoPlayer();
 });
 
-// ---- Wire all CTA buttons to configured URLs ----
+// ---- Wire all CTA buttons ----
 function wireButtons() {
-  const trialIds  = ["nav-trial-btn", "hero-trial-btn", "trial-cta-btn", "footer-trial-btn", "hiw-trial-btn"];
-  const demoIds   = ["nav-demo-btn", "hero-demo-btn", "demo-schedule-btn", "footer-demo-btn", "contact-demo-btn"];
-  const aiIds     = ["hero-ai-btn", "ai-launch-btn", "footer-ai-btn"];
-  const emailIds  = ["sales-email-link"];
-
-  trialIds.forEach(id => {
+  // Trial buttons → open trial modal
+  ["nav-trial-btn","hero-trial-btn","trial-cta-btn","footer-trial-btn","hiw-trial-btn","sticky-trial-btn"].forEach(id => {
     const el = document.getElementById(id);
-    if (el) { el.href = APP_TRIAL_URL; el.target = "_blank"; el.rel = "noopener"; }
+    if (!el) return;
+    el.addEventListener("click", e => { e.preventDefault(); openTrialModal(); });
   });
 
-  demoIds.forEach(id => {
+  // Demo buttons → open demo booking modal
+  ["nav-demo-btn","hero-demo-btn","demo-schedule-btn","footer-demo-btn","contact-demo-btn","sticky-demo-btn"].forEach(id => {
     const el = document.getElementById(id);
-    if (el) { el.href = DEMO_URL; el.target = "_blank"; el.rel = "noopener"; }
+    if (!el) return;
+    el.addEventListener("click", e => { e.preventDefault(); openDemoModal(); });
   });
 
-  aiIds.forEach(id => {
+  // AI buttons → open chat widget
+  ["hero-ai-btn","ai-launch-btn","footer-ai-btn"].forEach(id => {
     const el = document.getElementById(id);
-    if (el) { el.href = CHATBOT_URL; el.target = "_blank"; el.rel = "noopener"; }
+    if (!el) return;
+    el.addEventListener("click", e => {
+      e.preventDefault();
+      const panel = document.getElementById("chat-panel");
+      if (panel) { panel.classList.add("open"); document.getElementById("chat-input")?.focus(); }
+    });
   });
 
-  emailIds.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.href = `mailto:${CONTACT_EMAIL}`;
+  // Contact Sales → scroll to contact + pre-fill Enterprise
+  const contactSalesLinks = document.querySelectorAll('a[href="#contact"].pricing-btn, .pricing-btn[data-plan="enterprise"]');
+  contactSalesLinks.forEach(el => {
+    el.addEventListener("click", e => {
+      e.preventDefault();
+      const section = document.getElementById("contact");
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth" });
+        setTimeout(() => {
+          const planSelect = document.querySelector('#contactForm [name="plan"]');
+          if (planSelect) { planSelect.value = "enterprise"; planSelect.dispatchEvent(new Event("change")); }
+        }, 600);
+      }
+    });
   });
+
+  // Email links
+  document.querySelectorAll('[id="sales-email-link"]').forEach(el => {
+    el.href = `mailto:${CONTACT_EMAIL}`;
+  });
+
+  // Login link inside trial modal
+  const loginLink = document.getElementById("trialLoginLink");
+  if (loginLink) loginLink.href = APP_LOGIN_URL;
+
+  // Onboarding call link inside trial success step
+  const onboardingLink = document.getElementById("trialBookOnboarding");
+  if (onboardingLink) onboardingLink.addEventListener("click", e => { e.preventDefault(); openDemoModal(); });
+}
+
+// ---- Free Trial Modal ----
+function openTrialModal(plan) {
+  const modal = new bootstrap.Modal(document.getElementById("trialModal"));
+  goToTrialStep(1);
+  if (plan) {
+    sessionStorage.setItem("trialSelectedPlan", plan);
+    goToTrialStep(2);
+    setTimeout(() => selectTrialPlan(plan), 100);
+  }
+  modal.show();
+}
+
+function goToTrialStep(n) {
+  [1,2,3].forEach(i => {
+    document.getElementById(`trialStep${i}`)?.classList.toggle("d-none", i !== n);
+    document.querySelector(`.trial-step[data-step="${i}"]`)?.classList.toggle("active", i <= n);
+  });
+  const bar = document.getElementById("quizProgressBar");
+  if (bar) bar.style.width = `${(n/3)*100}%`;
+}
+
+function selectTrialPlan(plan) {
+  document.querySelectorAll(".trial-plan-card").forEach(c => c.classList.toggle("selected", c.dataset.plan === plan));
+  const btn = document.getElementById("trialStep2Next");
+  if (btn) { btn.disabled = false; btn.dataset.plan = plan; }
+}
+
+function initTrialModal() {
+  // Step 1 form submit
+  const step1Form = document.getElementById("trialStep1Form");
+  if (step1Form) {
+    step1Form.addEventListener("submit", e => {
+      e.preventDefault();
+      if (!validateForm(step1Form)) return;
+      goToTrialStep(2);
+      lucide.createIcons();
+    });
+  }
+
+  // Plan card selection
+  document.querySelectorAll(".trial-plan-card").forEach(card => {
+    card.addEventListener("click", () => selectTrialPlan(card.dataset.plan));
+  });
+
+  // Step 2 next
+  const step2Btn = document.getElementById("trialStep2Next");
+  if (step2Btn) {
+    step2Btn.addEventListener("click", () => {
+      goToTrialStep(3);
+      const goBtn = document.getElementById("trialGoToApp");
+      if (goBtn) { goBtn.href = APP_TRIAL_URL + "?plan=" + (step2Btn.dataset.plan || "growth"); goBtn.target = "_blank"; goBtn.rel = "noopener"; }
+      lucide.createIcons();
+    });
+  }
+
+  // Password visibility toggle
+  const togglePwd = document.getElementById("toggleTrialPwd");
+  const pwdInput  = document.getElementById("trialPassword");
+  if (togglePwd && pwdInput) {
+    togglePwd.addEventListener("click", () => {
+      const show = pwdInput.type === "password";
+      pwdInput.type = show ? "text" : "password";
+      togglePwd.innerHTML = show
+        ? '<i data-lucide="eye-off" style="width:18px;height:18px;"></i>'
+        : '<i data-lucide="eye" style="width:18px;height:18px;"></i>';
+      lucide.createIcons();
+    });
+  }
+
+  // Password strength meter
+  if (pwdInput) {
+    pwdInput.addEventListener("input", () => {
+      const v = pwdInput.value;
+      let score = 0;
+      if (v.length >= 8) score++;
+      if (/[A-Z]/.test(v)) score++;
+      if (/[0-9]/.test(v)) score++;
+      if (/[^A-Za-z0-9]/.test(v)) score++;
+      const fill  = document.getElementById("pwdFill");
+      const label = document.getElementById("pwdLabel");
+      const colors = ["#ff4d4d","#ff9800","#f4c95d","#00a6a6"];
+      const labels = ["Weak","Fair","Good","Strong"];
+      if (fill)  { fill.style.width = `${score*25}%`; fill.style.background = colors[score-1] || "#ddd"; }
+      if (label) { label.textContent = v.length ? labels[score-1] || "" : ""; label.style.color = colors[score-1] || ""; }
+    });
+  }
+}
+
+// ---- Demo Booking Modal ----
+function openDemoModal() {
+  const modal = new bootstrap.Modal(document.getElementById("bookDemoModal"));
+  modal.show();
+  // Load Calendly embed on first open
+  const container = document.getElementById("calendlyEmbed");
+  const fallback  = document.getElementById("calendlyFallbackBtn");
+  if (container && !container.dataset.loaded) {
+    container.dataset.loaded = "1";
+    if (DEMO_CALENDLY_URL && !DEMO_CALENDLY_URL.includes("yourcompany")) {
+      container.innerHTML = `<iframe src="${DEMO_CALENDLY_URL}?embed_type=Inline&hide_landing_page_details=1&hide_gdpr_banner=1" width="100%" height="630" frameborder="0"></iframe>`;
+      if (fallback) fallback.style.display = "none";
+    } else {
+      if (fallback) { fallback.href = DEMO_CALENDLY_URL; fallback.style.display = ""; }
+    }
+  }
+}
+
+function initDemoModal() {
+  // Tab switcher
+  document.querySelectorAll(".demo-tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      document.querySelectorAll(".demo-tab").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".demo-tab-panel").forEach(p => p.classList.add("d-none"));
+      tab.classList.add("active");
+      document.getElementById(`demoTab${tab.dataset.tab.charAt(0).toUpperCase() + tab.dataset.tab.slice(1)}`)?.classList.remove("d-none");
+      lucide.createIcons();
+    });
+  });
+
+  // Demo request form
+  const demoReqForm = document.getElementById("demoRequestForm");
+  if (demoReqForm) {
+    demoReqForm.querySelectorAll("[required]").forEach(field => {
+      field.addEventListener("blur", () => validateField(field));
+      field.addEventListener("input", () => { if (field.classList.contains("is-invalid")) validateField(field); });
+    });
+    demoReqForm.addEventListener("submit", e => {
+      e.preventDefault();
+      if (!validateForm(demoReqForm)) return;
+      showToast("Demo request received! We'll call you within 2 business hours.");
+      demoReqForm.reset();
+      bootstrap.Modal.getInstance(document.getElementById("bookDemoModal"))?.hide();
+    });
+  }
+}
+
+// ---- Plan Recommendations Quiz ----
+const quizAnswers = {};
+
+function initQuizModal() {
+  document.querySelectorAll(".quiz-option").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const q = btn.dataset.q;
+      const v = btn.dataset.v;
+      quizAnswers[q] = v;
+
+      // Highlight selection
+      document.querySelectorAll(`.quiz-option[data-q="${q}"]`).forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+
+      setTimeout(() => {
+        if (q === "1") {
+          document.getElementById("quizQ1").classList.add("d-none");
+          document.getElementById("quizQ2").classList.remove("d-none");
+          document.getElementById("quizProgressBar").style.width = "66%";
+        } else if (q === "2") {
+          document.getElementById("quizQ2").classList.add("d-none");
+          showQuizResult();
+        }
+      }, 350);
+    });
+  });
+
+  document.getElementById("quizRestartBtn")?.addEventListener("click", () => {
+    quizAnswers["1"] = null; quizAnswers["2"] = null;
+    document.querySelectorAll(".quiz-option").forEach(b => b.classList.remove("selected"));
+    document.getElementById("quizQ3").classList.add("d-none");
+    document.getElementById("quizQ1").classList.remove("d-none");
+    document.getElementById("quizProgressBar").style.width = "33%";
+  });
+
+  document.getElementById("quizStartTrialBtn")?.addEventListener("click", e => {
+    e.preventDefault();
+    bootstrap.Modal.getInstance(document.getElementById("quizModal"))?.hide();
+    const plan = document.getElementById("quizStartTrialBtn")?.dataset.plan || "growth";
+    setTimeout(() => openTrialModal(plan), 300);
+  });
+}
+
+function showQuizResult() {
+  const props     = quizAnswers["1"] || "3-10";
+  const challenge = quizAnswers["2"] || "bookings";
+
+  let plan = "growth", price = "$149/mo", reason = "";
+
+  if (props === "1-2") {
+    plan = "starter"; price = "$49/mo";
+    reason = "With 1–2 properties, Starter gives you everything you need — channel sync, automated messaging, and basic reporting — without overpaying.";
+  } else if (props === "30+") {
+    plan = "professional"; price = "$299/mo";
+    reason = "Managing 30+ properties needs enterprise-grade tools: API access, white-label portal, and priority support. Professional is built for you.";
+  } else if (challenge === "pricing") {
+    plan = "growth"; price = "$149/mo";
+    reason = "Growth includes dynamic pricing AI that automatically adjusts your rates to maximize revenue across all channels.";
+  } else if (challenge === "reporting") {
+    plan = "growth"; price = "$149/mo";
+    reason = "Growth's owner portal and advanced analytics give you the financial visibility and reporting your owners expect.";
+  } else if (challenge === "operations") {
+    plan = "growth"; price = "$149/mo";
+    reason = "Growth's operations hub automates cleaning schedules, maintenance tickets, and staff coordination across all your properties.";
+  } else {
+    plan = "growth"; price = "$149/mo";
+    reason = "Growth is our most popular plan — it handles multi-channel booking, guest messaging, and owner reporting for growing portfolios.";
+  }
+
+  const planNames = { starter: "Starter", growth: "Growth", professional: "Professional" };
+  document.getElementById("quizResultPlan").textContent = planNames[plan];
+  document.getElementById("quizResultPrice").textContent = price;
+  document.getElementById("quizResultReason").textContent = reason;
+  document.getElementById("quizResultPlanInline").textContent = planNames[plan];
+  const startBtn = document.getElementById("quizStartTrialBtn");
+  if (startBtn) startBtn.dataset.plan = plan;
+
+  document.getElementById("quizQ3").classList.remove("d-none");
+  document.getElementById("quizProgressBar").style.width = "100%";
+  lucide.createIcons();
 }
 
 // ---- Navbar scroll effect ----
@@ -220,8 +469,7 @@ function initPricingButtons() {
   document.querySelectorAll(".pricing-btn[data-plan]").forEach(btn => {
     btn.addEventListener("click", e => {
       e.preventDefault();
-      const plan = btn.dataset.plan;
-      window.open(`${APP_TRIAL_URL}?plan=${plan}`, "_blank", "noopener");
+      openTrialModal(btn.dataset.plan);
     });
   });
 }
