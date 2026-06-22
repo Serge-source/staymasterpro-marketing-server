@@ -106,7 +106,13 @@ function wireButtons() {
 }
 
 // ---- Free Trial Modal ----
+function track(action, category, label) {
+  if (typeof window.trackEvent === "function") window.trackEvent(action, category, label);
+  if (typeof fbq === "function") fbq("track", action === "begin_checkout" ? "InitiateCheckout" : "Lead", { content_name: label });
+}
+
 function openTrialModal(plan) {
+  track("begin_checkout", "Trial", plan || "unknown");
   const modal = new bootstrap.Modal(document.getElementById("trialModal"));
   goToTrialStep(1);
   if (plan) {
@@ -193,24 +199,6 @@ function initTrialModal() {
   }
 }
 
-// ---- Demo Booking Modal ----
-function openDemoModal() {
-  const modal = new bootstrap.Modal(document.getElementById("bookDemoModal"));
-  modal.show();
-  // Load Calendly embed on first open
-  const container = document.getElementById("calendlyEmbed");
-  const fallback  = document.getElementById("calendlyFallbackBtn");
-  if (container && !container.dataset.loaded) {
-    container.dataset.loaded = "1";
-    if (DEMO_CALENDLY_URL && !DEMO_CALENDLY_URL.includes("yourcompany")) {
-      container.innerHTML = `<iframe src="${DEMO_CALENDLY_URL}?embed_type=Inline&hide_landing_page_details=1&hide_gdpr_banner=1" width="100%" height="630" frameborder="0"></iframe>`;
-      if (fallback) fallback.style.display = "none";
-    } else {
-      if (fallback) { fallback.href = DEMO_CALENDLY_URL; fallback.style.display = ""; }
-    }
-  }
-}
-
 // ---- Demo Booking Modal + Native Calendar ----
 const calState = {
   year: null, month: null,        // currently displayed month
@@ -293,6 +281,7 @@ function initDemoModal() {
         });
         const data = await res.json();
         if (data.success) {
+          track("purchase", "Demo", `booking_confirmed_${data.confirmation}`);
           showBookingStep("success");
           document.getElementById("confirmDateDisplay").textContent = formatDate(data.date);
           document.getElementById("confirmTimeDisplay").textContent = formatSlot(data.slot);
@@ -337,6 +326,7 @@ function initDemoModal() {
 }
 
 function openDemoModal() {
+  track("schedule", "Demo", "book_demo_opened");
   const modal = new bootstrap.Modal(document.getElementById("bookDemoModal"));
   modal.show();
   // Reset to step 1

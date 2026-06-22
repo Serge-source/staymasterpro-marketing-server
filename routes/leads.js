@@ -7,6 +7,7 @@ const db      = require("../db/pool");
 const logger  = require("../middleware/logger");
 const { requireJWT, requireRole } = require("../middleware/auth");
 
+const { sendContactNotification, sendTrialWelcome } = require("../middleware/mailer");
 const router = express.Router();
 
 // Sanitize a plain object's string values against XSS
@@ -34,6 +35,7 @@ router.post("/contact", async (req, res) => {
       [uuidv4(), fullName, companyName, email, phone, numProperties, interestedPlan, message, req.ip]
     );
     logger.info(`New contact request from ${email}`);
+    sendContactNotification({ fullName, email, phone, company: companyName, message, interestedPlan }).catch(() => {});
     res.json({ success: true, message: "Thank you! Our team will reply within 24 hours." });
   } catch (err) {
     logger.error("Contact form error", { err: err.message });
@@ -80,6 +82,7 @@ router.post("/trial", async (req, res) => {
       [uuidv4(), name, email, plan || "unknown", req.ip]
     );
     logger.info(`New trial request from ${email} — plan: ${plan}`);
+    sendTrialWelcome({ name, email, plan }).catch(() => {});
     res.json({ success: true, message: "Your 14-day free trial is ready! Check your email." });
   } catch (err) {
     logger.error("Trial request error", { err: err.message });

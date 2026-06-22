@@ -7,6 +7,7 @@ const db      = require("../db/pool");
 const logger  = require("../middleware/logger");
 const { requireJWT, requireRole } = require("../middleware/auth");
 
+const { sendBookingConfirmation } = require("../middleware/mailer");
 const router = express.Router();
 
 // ---- Config ----
@@ -159,6 +160,7 @@ router.post("/", async (req, res) => {
     );
 
     logger.info(`Demo booked by ${email} on ${date} at ${slot} — ${confirmNo}`);
+    sendBookingConfirmation({ fullName, email, date, slot, confirmationNo: confirmNo }).catch(() => {});
     res.json({
       success: true,
       message: "Demo booked successfully!",
