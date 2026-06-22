@@ -1092,7 +1092,7 @@ function initStickyCTA() {
   const trialBtn = document.getElementById("sticky-trial-btn");
   const demoBtn  = document.getElementById("sticky-demo-btn");
   if (trialBtn) { trialBtn.href = APP_TRIAL_URL; trialBtn.target = "_blank"; trialBtn.rel = "noopener"; }
-  if (demoBtn)  { demoBtn.href  = DEMO_URL;      demoBtn.target  = "_blank"; demoBtn.rel  = "noopener"; }
+  if (demoBtn)  { demoBtn.addEventListener("click", e => { e.preventDefault(); openDemoModal(); }); }
 
   const heroSection = document.getElementById("home");
   if (!heroSection) return;
